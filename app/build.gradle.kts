@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.alarm__wars"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.alarm__wars"
