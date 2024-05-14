@@ -1,50 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:background="@drawable/alarm"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select \nTime"
-        android:id="@+id/selectTime"
-        android:textSize="40sp"
-        android:layout_marginTop="280dp"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/white"
-        android:textAlignment="center"/>
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:context=".MainActivity">
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alarm War"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:textSize="30sp"
+            android:fontFamily="sans-serif-black"
+            android:fontStyle="normal"
+            android:fontWeight="700"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/LoginHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그인"
+            android:layout_below="@id/appName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:textSize="27sp"
+            android:fontFamily="sans-serif-black"
+            android:fontStyle="normal"
+            android:fontWeight="900"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:background="@drawable/round_background_border"
+            android:clipToOutline="true"
+            android:id="@+id/imgApp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/app_icon2"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/LoginHeader"
+            android:layout_marginTop="20dp" />
+
+        <EditText
+            android:id="@+id/etUserId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="아이디"
+            android:shape="rectangle"
+            android:layout_below="@id/imgApp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="@drawable/edit_text_rectangular_background"
+            android:textSize="14sp" />
+
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호"
+            android:shape="rectangle"
+            android:inputType="textPassword"
+            android:layout_below="@id/etUserId"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="@drawable/edit_text_rectangular_background"
+            android:textSize="14sp" />
 
         <Button
-            android:layout_width="150dp"
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/setAlarm"
-            android:text="Set \nAlarm"
-            android:textSize="20sp"
-            android:padding="8dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="250dp"/>
+            android:text="로그인"
+            android:radius="10dp"
+            android:layout_below="@id/etPassword"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
 
-        <Button
-            android:layout_width="150dp"
+
+        <View
+            android:id="@+id/separatorActions"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_below="@id/btnLogin"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:id="@+id/llActions"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cancelAlarm"
-            android:text="Cancel \nAlarm"
-            android:textSize="20sp"
-            android:padding="8dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="250dp"
-            android:layout_marginEnd="40dp"/>
+            android:orientation="horizontal"
+            android:layout_below="@id/separatorActions"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/btnFindId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/find_id"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:layout_marginRight="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindIdClicked" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:background="#DDDDDD" />
+
+            <TextView
+                android:id="@+id/btnFindPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/find_password"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindPasswordClicked" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:background="#DDDDDD" />
+
+            <TextView
+                android:id="@+id/btnSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:layout_marginLeft="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onSignUpClicked" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/dividerLoginActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/llActions"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <View
+                android:id="@+id/separatorActionsLeft"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"
+                android:layout_weight="5" />
+
+            <TextView
+                android:id="@+id/tvSimpleLogin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=" 간편 로그인 "
+                android:gravity="center"
+                android:layout_weight="3" />
+
+            <View
+                android:id="@+id/separatorActionsRight"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#DDDDDD"
+                android:layout_weight="5"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSocialMediaLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/dividerLoginActions"
+            android:layout_marginTop="16dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgGoogle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/google_icon"
+                android:layout_marginRight="64dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindIdClicked"/>
+
+            <ImageView
+                android:id="@+id/imgNaver"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/naver_icon"
+                android:layout_marginRight="64dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindIdClicked"/>
+
+            <ImageView
+                android:id="@+id/imgKakaotalk"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/kakaotalk_icon"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onFindIdClicked"/>
+        </LinearLayout>
+
     </RelativeLayout>
 
-</LinearLayout>
+</ScrollView>
+
+

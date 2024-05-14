@@ -34,6 +34,10 @@ android {
 dependencies {
 
     // 권한 설정 라이브러리
+    implementation("com.google.android.gms:play-services-auth:19.0.0")
+    implementation("com.naver.nid:naveridlogin-android-sdk:4.2.6")
+    implementation("com.kakao.sdk:v2-user:2.5.0")
+
     implementation("com.karumi:dexter:6.2.1")
 
     implementation("androidx.appcompat:appcompat:1.6.1")
