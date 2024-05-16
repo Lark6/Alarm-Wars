@@ -1,9 +1,5 @@
 package com.example.alarm__wars;
 
-
-
-
-// test commit
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,14 +20,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
     }
@@ -66,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
                             if (error == null) {
                                 // 팝업 창으로 호스트 코드 보여주기
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity2.this);
                                 builder.setTitle("방이 생성되었습니다")
                                         .setMessage("호스트 코드: " + hostCode)
                                         .setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -78,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
                                 AlertDialog dialog = builder.create();
                                 dialog.show();
                             } else {
-                                Toast.makeText(MainActivity.this, "방 생성에 실패했습니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity2.this, "방 생성에 실패했습니다", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                 } else {
-                    Toast.makeText(MainActivity.this, "알람 시간을 입력하세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity2.this, "알람 시간을 입력하세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -124,20 +120,20 @@ public class MainActivity extends AppCompatActivity {
                             Room room = dataSnapshot.getValue(Room.class);
                             if (!room.isHostSelected()) {
                                 // 호스트 코드를 룸 액티비티에 전달하여 실행
-                                Intent intent = new Intent(MainActivity.this, RoomActivity.class);
+                                Intent intent = new Intent(MainActivity2.this, RoomActivity.class);
                                 intent.putExtra("hostCode", hostCode);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(MainActivity.this, "이미 선택된 호스트입니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity2.this, "이미 선택된 호스트입니다", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "입력한 호스트 코드가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity2.this, "입력한 호스트 코드가 존재하지 않습니다", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(MainActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity2.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
