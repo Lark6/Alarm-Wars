@@ -1,85 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/create_room_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:text="방 만들기"
+        android:onClick="createRoom" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="결과"
-            android:textSize="24sp"
-            android:layout_marginBottom="24dp" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="버튼"
-            android:layout_marginBottom="24dp" />
-
-        <Button
-            android:id="@+id/resetButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="초기화" />
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp"
-            tools:context=".MainActivity">
-
-            <EditText
-                android:id="@+id/operand1EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Operand"
-                android:inputType="number"/>
-
-            <EditText
-                android:id="@+id/operatorEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Operator (+, -, *)"
-                android:inputType="text"/>
-
-            <EditText
-                android:id="@+id/operand2EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Operand"
-                android:inputType="number"/>
-
-            <Button
-                android:id="@+id/submitButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="제출하기"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/join_room_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="방 접속하기"
+        android:onClick="joinRoom"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

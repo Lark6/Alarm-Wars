@@ -1,9 +1,5 @@
 package com.example.alarm__wars;
 
-
-
-
-// test commit
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     final long alarmTime = Long.parseLong(alarmTimeStr);
 
                     // 호스트 코드를 데이터베이스에 저장
-                    Room room = new Room("Q", "A", false, alarmTime);
+                    Room room = new Room("Q", "A", false, alarmTime, false, false);
                     mDatabase.child(String.valueOf(hostCode)).setValue(room, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
