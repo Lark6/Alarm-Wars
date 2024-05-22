@@ -159,6 +159,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="onSignUpClicked" />
+
+
+
         </LinearLayout>
 
 
@@ -205,8 +208,8 @@
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/Glogin"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/google_icon"
                 android:layout_marginRight="64dp"
                 android:clickable="true"

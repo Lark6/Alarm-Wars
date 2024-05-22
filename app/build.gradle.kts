@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation ("com.google.android.gms:play-services-auth:19.2.0")
+    implementation ("com.google.android.gms:play-services-auth:20.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
