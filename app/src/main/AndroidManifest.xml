@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -31,6 +34,19 @@
             android:name=".WaitingQuestionActivity"
             android:exported="false" />
         <activity
+            android:name=".IntroActivity"
+            android:exported="true">
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity android:name=".MakeRoomActivity" />
+        <activity android:name=".AlarmActivity" />
+
+
+        <activity
             android:name=".RoomActivity"
             android:exported="false"
             android:label="@string/title_activity_room"
@@ -44,6 +60,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false"
+            />
     </application>
 
 </manifest>
