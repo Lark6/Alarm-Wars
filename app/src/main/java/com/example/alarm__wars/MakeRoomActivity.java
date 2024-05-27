@@ -22,12 +22,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 public class MakeRoomActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private  String hostCode;
+
     String[] amPm = {"AM", "PM"};
     String[] hour = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
     String[] minute = {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -94,18 +97,18 @@ public class MakeRoomActivity extends AppCompatActivity {
 
         // Check if there is a pending alarm and navigate to WaitActivity if so
         SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("isAlarmSet", false)) {
-            Intent waitIntent = new Intent(MakeRoomActivity.this, WaitActivity.class);
-            waitIntent.putExtra("alarmTimeInMillis", sharedPreferences.getLong("alarmTimeInMillis", 0));
-            startActivity(waitIntent);
-            finish();
-        }
+//        if (sharedPreferences.getBoolean("isAlarmSet", false)) {
+//            Intent waitIntent = new Intent(MakeRoomActivity.this, WaitActivity.class);
+//            waitIntent.putExtra("alarmTimeInMillis", sharedPreferences.getLong("alarmTimeInMillis", 0));
+//            startActivity(waitIntent);
+//            finish();
+//        }
 
         binding.btnCancel.setOnClickListener(view -> finish());
 
         binding.btnMake.setOnClickListener(view -> {
             // 알람 설정 버튼 클릭 시 WaitActivity 시작
-            Intent waitIntent = new Intent(MakeRoomActivity.this, WaitActivity.class);
+            Intent waitIntent = new Intent(MakeRoomActivity.this, hostWaitActivity.class);
             int selectedHour = Integer.parseInt(hour[spinner2.getSelectedItemPosition()]);
             int selectedMinute = Integer.parseInt(minute[spinner3.getSelectedItemPosition()]);
             String selectedAmPm = amPm[spinner1.getSelectedItemPosition()];
@@ -116,35 +119,36 @@ public class MakeRoomActivity extends AppCompatActivity {
                 selectedHour = 0;
             }
 
-            int selectedDay = getSelectedDay(binding);
-            long alarmTimeInMillis = calculateAlarmTimeInMillis(selectedHour, selectedMinute, selectedDay);
-            waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
+            // 선택된 요일 확인
+            boolean[] selectedDays = {
+                    binding.sunday.isChecked(),
+                    binding.monday.isChecked(),
+                    binding.tuesday.isChecked(),
+                    binding.wednesday.isChecked(),
+                    binding.thursday.isChecked(),
+                    binding.friday.isChecked(),
+                    binding.saturday.isChecked()
+            };
 
+//            int selectedDay = getSelectedDay(binding);
+
+
+
+            long alarmTimeInMillis = calculateAlarmTimeInMillis(selectedHour, selectedMinute, selectedDays);
+            // 알람 설정
+            setAlarm(alarmTimeInMillis);
+
+            waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
+            waitIntent.putExtra("hostCode", hostCode);
             // Save alarm details to SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isAlarmSet", true);
             editor.putLong("alarmTimeInMillis", alarmTimeInMillis);
             editor.apply();
-
             startActivity(waitIntent);
             finish();
 
-            // 알람 설정
-            setAlarm(alarmTimeInMillis);
 
-            createRoom(alarmTimeInMillis);
-
-
-//            // 선택된 요일 확인
-//            boolean[] selectedDays = {
-//                    binding.sunday.isChecked(),
-//                    binding.monday.isChecked(),
-//                    binding.tuesday.isChecked(),
-//                    binding.wednesday.isChecked(),
-//                    binding.thursday.isChecked(),
-//                    binding.friday.isChecked(),
-//                    binding.saturday.isChecked()
-//            };
 
 //            for (int i = 0; i < selectedDays.length; i++) {
 //                if (selectedDays[i]) {
@@ -153,10 +157,13 @@ public class MakeRoomActivity extends AppCompatActivity {
 //            }
 
 //            // boolean[]을 List<Boolean>으로 전환
-//            List<Boolean> selectedDaysList = new ArrayList<>();
-//            for (boolean day : selectedDays) {
-//                selectedDaysList.add(day);
-//            }
+            List<Boolean> selectedDaysList = new ArrayList<>();
+            for (boolean day : selectedDays) {
+                selectedDaysList.add(day);
+            }
+
+            int alarmTime = selectedHour * 100 + selectedMinute;
+            createRoom(alarmTime, selectedDaysList);
 
 //            Calendar alarmTime = Calendar.getInstance();
 //            alarmTime.set(Calendar.HOUR_OF_DAY, selectedHour);
@@ -243,32 +250,56 @@ public class MakeRoomActivity extends AppCompatActivity {
 //        Toast.makeText(this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
 //    }
 
-    public static long calculateAlarmTimeInMillis(int selectedHour, int selectedMinute, int selectedDay) {
+    public static int calculateDaysUntilNextAlarm(boolean[] selectedDays, int currentDay, boolean isTodayAlarmValid) {
+        int daysUntilNextAlarm = Integer.MAX_VALUE;
+
+        for (int i = 0; i < selectedDays.length; i++) {
+            if (selectedDays[i]) {
+                int dayIndex = (i + 1) % 7; // 배열 인덱스를 Calendar 요일 값으로 변환 (1: 일요일, 2: 월요일, ... , 7: 토요일)
+                int daysDifference = dayIndex - currentDay;
+                if (daysDifference < 0) {
+                    daysDifference += 7; // 과거 요일일 경우 다음 주 같은 요일로 설정
+                }
+                if (daysDifference == 0 && !isTodayAlarmValid) {
+                    // 당일이지만 오늘의 알람 시간이 이미 지난 경우, 다음 주 같은 요일로 설정
+                    daysDifference += 7;
+                }
+                if (daysDifference < daysUntilNextAlarm) {
+                    daysUntilNextAlarm = daysDifference;
+                }
+            }
+        }
+        return daysUntilNextAlarm;
+    }
+
+
+    public static long calculateAlarmTimeInMillis(int selectedHour, int selectedMinute, boolean[] selectedDays) {
         Calendar alarmTime = Calendar.getInstance();
         alarmTime.set(Calendar.HOUR_OF_DAY, selectedHour);
         alarmTime.set(Calendar.MINUTE, selectedMinute);
         alarmTime.set(Calendar.SECOND, 0);
 
         Calendar currentTime = Calendar.getInstance();
-        if (alarmTime.before(currentTime)) {
-            alarmTime.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        boolean isTodayAlarmValid = !alarmTime.before(currentTime);
 
-        if (selectedDay != 0) {
-            int currentDay = currentTime.get(Calendar.DAY_OF_WEEK);
-            int daysUntilAlarm = selectedDay - currentDay;
-            if (daysUntilAlarm < 0) {
-                daysUntilAlarm += 7;
-            }
-            alarmTime.add(Calendar.DAY_OF_MONTH, daysUntilAlarm);
-        }
+        int currentDay = currentTime.get(Calendar.DAY_OF_WEEK);
+        int daysUntilNextAlarm = calculateDaysUntilNextAlarm(selectedDays, currentDay, isTodayAlarmValid);
+
+        alarmTime.add(Calendar.DAY_OF_MONTH, daysUntilNextAlarm);
 
         return alarmTime.getTimeInMillis();
     }
 
+
     @SuppressLint("ScheduleExactAlarm")
     private void setAlarm(long alarmTimeInMillis) {
         Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("hostCode", hostCode);
+        // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
+        long currentTime1 = System.currentTimeMillis();
+        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
+        intent.setAction(action);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -278,34 +309,31 @@ public class MakeRoomActivity extends AppCompatActivity {
         Toast.makeText(this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
     }
 
-    private int getSelectedDay(ActivityMakeRoomBinding binding) {
-        if (binding.monday.isChecked()) {
-            return Calendar.MONDAY;
-        } else if (binding.tuesday.isChecked()) {
-            return Calendar.TUESDAY;
-        } else if (binding.wednesday.isChecked()) {
-            return Calendar.WEDNESDAY;
-        } else if (binding.thursday.isChecked()) {
-            return Calendar.THURSDAY;
-        } else if (binding.friday.isChecked()) {
-            return Calendar.FRIDAY;
-        } else if (binding.saturday.isChecked()) {
-            return Calendar.SATURDAY;
-        } else if (binding.sunday.isChecked()) {
-            return Calendar.SUNDAY;
-        }
-        return 0;
-    }
+//    private int getSelectedDay(ActivityMakeRoomBinding binding) {
+//        if (binding.monday.isChecked()) {
+//            return Calendar.MONDAY;
+//        } else if (binding.tuesday.isChecked()) {
+//            return Calendar.TUESDAY;
+//        } else if (binding.wednesday.isChecked()) {
+//            return Calendar.WEDNESDAY;
+//        } else if (binding.thursday.isChecked()) {
+//            return Calendar.THURSDAY;
+//        } else if (binding.friday.isChecked()) {
+//            return Calendar.FRIDAY;
+//        } else if (binding.saturday.isChecked()) {
+//            return Calendar.SATURDAY;
+//        } else if (binding.sunday.isChecked()) {
+//            return Calendar.SUNDAY;
+//        }
+//        return 0;
+//    }
 
-    private void createRoom(long alarmTime) {
-        System.out.println(11);
-        // 랜덤한 6자리 호스트 코드 생성
-
+    private void createRoom(int alarmTime, List<Boolean> selectedDaysList ) {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
 
         // 호스트 코드를 데이터베이스에 저장
-        Room room = new Room("Q", "A", false, alarmTime, false, false);
+        Room room = new Room("Q", "A", false, alarmTime, false, false, selectedDaysList, false);
         mDatabase.child(String.valueOf(hostCode)).setValue(room, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {

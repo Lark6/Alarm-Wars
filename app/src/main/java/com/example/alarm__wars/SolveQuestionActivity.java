@@ -62,6 +62,7 @@ public class SolveQuestionActivity extends AppCompatActivity {
                         Intent intent = new Intent(SolveQuestionActivity.this, EndAlarmActivity.class);
                         intent.putExtra("hostCode", hostCode);
                         startActivity(intent);
+                        finish();
                     } else {
                         // 호스트가 이미 선택된 경우 토스트 메시지 표시
                         Toast.makeText(SolveQuestionActivity.this, "답이 틀렸어요", Toast.LENGTH_SHORT).show();

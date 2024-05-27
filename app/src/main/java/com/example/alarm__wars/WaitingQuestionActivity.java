@@ -36,9 +36,9 @@ public class WaitingQuestionActivity extends AppCompatActivity {
                     Intent intent = new Intent(WaitingQuestionActivity.this, SolveQuestionActivity.class);
                     intent.putExtra("hostCode", hostCode);
                     startActivity(intent);
+                    finish();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // 데이터베이스 오류 발생 시 호출됨

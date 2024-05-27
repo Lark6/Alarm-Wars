@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center|top">
+
+    <TextView
+        android:id="@+id/txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="알람 설정하기"
+        android:textSize="25sp" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/txtTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt"
+        android:hint="알람 시간"
+        android:paddingLeft ="90px"
+        android:textSize="18sp" >
+    </TextView>
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/spinner2"
+        android:layout_alignTop="@+id/spinner2"
+        />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/txtTime"
+        android:id="@+id/spinner2"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:id="@+id/spinner3"
+        android:layout_toRightOf="@+id/spinner2"
+        android:layout_alignTop="@+id/spinner2"/>
+
+    <TextView
+        android:id="@+id/txtDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner2"
+        android:hint="반복할 요일 설정"
+        android:paddingLeft ="90px"
+        android:textSize="18sp" >
+    </TextView>
+
+    <ToggleButton
+        android:id="@+id/monday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="월"
+        android:textOn="월"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/tuesday"
+        android:layout_alignTop="@+id/tuesday"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/tuesday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="화"
+        android:textOn="화"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/wednesday"
+        android:layout_alignTop="@+id/wednesday"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/wednesday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="수"
+        android:textOn="수"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toLeftOf="@+id/thursday"
+        android:layout_alignTop="@+id/thursday"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/thursday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="목"
+        android:textOn="목"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/txtDay"
+        android:layout_centerInParent="true"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/friday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="금"
+        android:textOn="금"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/thursday"
+        android:layout_alignTop="@+id/thursday"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/saturday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="토"
+        android:textOn="토"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/friday"
+        android:layout_alignTop="@+id/friday"
+        tools:ignore="MissingConstraints" />
+
+    <ToggleButton
+        android:id="@+id/sunday"
+        android:background="@drawable/toggle_background"
+        android:checked="false"
+        android:textOff="일"
+        android:textOn="일"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/saturday"
+        android:layout_alignTop="@+id/saturday"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:layout_below="@+id/thursday">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="#EEEEEE"
+            android:text="취소" />
+
+        <Button
+            android:id="@+id/btnSet"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="#8692f7"
+            android:text="시간 재설정" />
+
+    </LinearLayout>
+
+</RelativeLayout>

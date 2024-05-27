@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -80,9 +81,8 @@ public class RoomActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 fetchAlarmDataAndSetAlarms();
-                Intent intent = new Intent(RoomActivity.this, WaitActivity.class);
-                startActivity(intent);
-
+//                Intent intent = new Intent(RoomActivity.this, WaitActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -122,38 +122,49 @@ public class RoomActivity extends AppCompatActivity {
     }
 
     private void fetchAlarmDataAndSetAlarms() {
-//        mDatabase.child(hostCode).child("dates").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    ServerDays.clear();
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        ServerDays.add(snapshot.getValue(Boolean.class));
-//                    }
+        mDatabase.child(hostCode).child("dates").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    ServerDays.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ServerDays.add(snapshot.getValue(Boolean.class));
+                    }
 
                     mDatabase.child(hostCode).child("alarmTime").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                long serverAlarmTime = dataSnapshot.getValue(Long.class);
+                                int serverAlarmTime = dataSnapshot.getValue(int.class);
                                 System.out.println(serverAlarmTime);
 //                                alarmTime = Calendar.getInstance();
 //                                alarmTime.setTimeInMillis(serverAlarmTime);
-
-//                                selectedDays = new boolean[ServerDays.size()];
-//                                for (int i = 0; i < ServerDays.size(); i++) {
-//                                    selectedDays[i] = ServerDays.get(i) != null && ServerDays.get(i); // null 체크와 함께 변환
-//                                }
-//                                System.out.println(selectedDays);
 //
-//                                for (int i = 0; i < selectedDays.length; i++) {
-//                                    if (selectedDays[i]) {
-//                                        Calendar alarmCalendar = (Calendar) alarmTime.clone();
-//                                        setAlarm(alarmCalendar, i + 1); // Calendar.DAY_OF_WEEK는 1부터 시작
-//                                    }
-//                                }
-//                                Calendar alarmCalendar = (Calendar) alarmTime.clone();
-                                setAlarm(serverAlarmTime);
+                                selectedDays = new boolean[ServerDays.size()];
+                                for (int i = 0; i < ServerDays.size(); i++) {
+                                    selectedDays[i] = ServerDays.get(i) != null && ServerDays.get(i); // null 체크와 함께 변환
+                                }
+                                System.out.println(selectedDays);
+
+                                int hours = serverAlarmTime / 100;
+                                int minutes = serverAlarmTime % 100;
+
+                                long alarmTimeInMillis = MakeRoomActivity.calculateAlarmTimeInMillis(hours, minutes, selectedDays);
+                                setAlarm(alarmTimeInMillis);
+
+                                Intent waitIntent = new Intent(RoomActivity.this, WaitActivity.class);
+                                waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
+                                waitIntent.putExtra("hostCode", hostCode);
+
+                                SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("isAlarmSet", true);
+                                editor.putLong("alarmTimeInMillis", alarmTimeInMillis);
+                                editor.apply();
+                                startActivity(waitIntent);
+                                finish();
+
+
                             } else {
                                 // 문제 정보를 찾을 수 없는 경우
                                 Toast.makeText(RoomActivity.this, "알람 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
@@ -166,24 +177,30 @@ public class RoomActivity extends AppCompatActivity {
                             Toast.makeText(RoomActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
                         }
                     });
-//
-//                } else {
-//                    // 날짜 정보를 찾을 수 없는 경우
-//                    Toast.makeText(RoomActivity.this, "날짜 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
-//                }
-//            }
 
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // 데이터베이스 오류 발생 시
-//                Toast.makeText(RoomActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+                } else {
+                    // 날짜 정보를 찾을 수 없는 경우
+                    Toast.makeText(RoomActivity.this, "날짜 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // 데이터베이스 오류 발생 시
+                Toast.makeText(RoomActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @SuppressLint("ScheduleExactAlarm")
     private void setAlarm(long alarmTimeInMillis) {
         Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra("hostCode", hostCode);
+        // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
+        long currentTime1 = System.currentTimeMillis();
+        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
+        intent.setAction(action);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -1,20 +1,20 @@
 package com.example.alarm__wars;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.alarm__wars.databinding.ActivityWaitBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,58 +24,100 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EndAlarmActivity extends AppCompatActivity {
-
+public class hostWaitActivity extends AppCompatActivity {
+    private ActivityWaitBinding binding;
+    private CountDownTimer countDownTimer;
+    private long alarmTimeInMillis;
+    private long timeLeftInMillis;
+    private  String hostCode;
     private DatabaseReference mDatabase;
-    private String hostCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_end_alarm);
+        binding = ActivityWaitBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
+        Intent intent = getIntent();
+        alarmTimeInMillis = intent.getLongExtra("alarmTimeInMillis", 0);
+        updateRemainingTime();
+
+        startCountDown();
+
         hostCode = getIntent().getStringExtra("hostCode");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
 
-        if (RingActivity.mediaPlayer != null && RingActivity.mediaPlayer.isPlaying()) {
-            RingActivity.mediaPlayer.stop();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetAlarm(); // resetAlarm() 함수 실행
-                }
-            }, 5000); // 5초의 딜레이를 줌
+        // 데이터 변경 감지 리스너 등록
+        binding.checkButton.setOnClickListener(view -> {
+//            Toast.makeText(this, "알람이 취소되었습니다.", Toast.LENGTH_SHORT).show();
+            SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isAlarmSet", false);
+            editor.apply();
 
+            EndAlarmActivity.cancelAlarm(this);
+
+            Intent mainIntent = new Intent(hostWaitActivity.this, updateTimeActivity.class);
+            mainIntent.putExtra("hostCode", hostCode);
+            // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
+            long currentTime2 = System.currentTimeMillis();
+            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime2;
+            mainIntent.setAction(action);
+
+            startActivity(mainIntent);
+            finish();
+        });
+    }
+
+
+    private void updateRemainingTime() {
+        long currentTimeInMillis = System.currentTimeMillis();
+        timeLeftInMillis = alarmTimeInMillis - currentTimeInMillis;
+    }
+
+    private void startCountDown() {
+        countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMillis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                // 알람이 울릴 때 AlarmActivity로 전환
+//                Intent alarmIntent = new Intent(WaitActivity.this, RingActivity.class);
+//                startActivity(alarmIntent);
+//                finish();
+            }
+        }.start();
+    }
+
+    private void updateCountDownText() {
+        int days = (int) (timeLeftInMillis / (1000 * 60 * 60 * 24));
+        int hours = (int) ((timeLeftInMillis / (1000 * 60 * 60)) % 24);
+        int minutes = (int) ((timeLeftInMillis / (1000 * 60)) % 60);
+        int seconds = (int) (timeLeftInMillis / 1000) % 60;
+
+        String timeLeftFormatted;
+        if (days > 0) {
+            timeLeftFormatted = String.format("%d일 %02d:%02d:%02d", days, hours, minutes, seconds);
+        } else {
+            timeLeftFormatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
+
+        binding.timerText.setText(timeLeftFormatted);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
 
-    /* 알람 초기화 */
-    private void resetAlarm() {
-        SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isAlarmSet", false);
-        editor.remove("alarmTimeInMillis"); // Remove the alarm time
-        editor.apply();
-
-        cancelAlarm(this);
-        fetchAlarmDataAndSetAlarms();
-
-    }
-    public static void cancelAlarm(Context context) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        // 현재 설정된 알람 취소
-        alarmManager.cancel(pendingIntent);
-
-        Toast.makeText(context, "알람 취소 완료", Toast.LENGTH_SHORT).show();
-    }
-
-
     private void fetchAlarmDataAndSetAlarms() {
-
         List<Boolean> ServerDays = new ArrayList<>();
         mDatabase.child(hostCode).child("dates").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -107,7 +149,7 @@ public class EndAlarmActivity extends AppCompatActivity {
                                 long alarmTimeInMillis = MakeRoomActivity.calculateAlarmTimeInMillis(hours, minutes, selectedDays);
                                 setAlarm(alarmTimeInMillis);
 
-                                Intent waitIntent = new Intent(EndAlarmActivity.this, hostWaitActivity.class);
+                                Intent waitIntent = new Intent(hostWaitActivity.this, WaitActivity.class);
                                 waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
                                 waitIntent.putExtra("hostCode", hostCode);
 
@@ -122,27 +164,27 @@ public class EndAlarmActivity extends AppCompatActivity {
 
                             } else {
                                 // 문제 정보를 찾을 수 없는 경우
-                                Toast.makeText(EndAlarmActivity.this, "알람 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(hostWaitActivity.this, "알람 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             // 데이터베이스 오류 발생 시
-                            Toast.makeText(EndAlarmActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(hostWaitActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
                         }
                     });
 
                 } else {
                     // 날짜 정보를 찾을 수 없는 경우
-                    Toast.makeText(EndAlarmActivity.this, "날짜 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(hostWaitActivity.this, "날짜 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // 데이터베이스 오류 발생 시
-                Toast.makeText(EndAlarmActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(hostWaitActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -151,7 +193,6 @@ public class EndAlarmActivity extends AppCompatActivity {
     private void setAlarm(long alarmTimeInMillis) {
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("hostCode", hostCode);
-
         // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
         long currentTime1 = System.currentTimeMillis();
         String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;

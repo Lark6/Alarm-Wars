@@ -34,6 +34,12 @@
             android:name=".WaitingQuestionActivity"
             android:exported="false" />
         <activity
+            android:name=".updateTimeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".hostWaitActivity"
+            android:exported="false" />
+        <activity
             android:name=".IntroActivity"
             android:exported="true">
 

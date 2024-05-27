@@ -76,6 +76,7 @@ public class MakeQuestionActivity extends AppCompatActivity {
                 Intent intent = new Intent(MakeQuestionActivity.this, EndAlarmActivity.class);
                 intent.putExtra("hostCode", hostCode);
                 startActivity(intent);
+                finish();
             }
         });
     }

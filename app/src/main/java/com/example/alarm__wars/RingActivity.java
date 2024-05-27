@@ -62,11 +62,13 @@ public class RingActivity extends AppCompatActivity {
                         Intent intent = new Intent(RingActivity.this, MakeQuestionActivity.class);
                         intent.putExtra("hostCode", hostCode);
                         startActivity(intent);
+                        finish();
                     } else {
                         // 버튼을 늦게 누른 경우
                         Intent intent = new Intent(RingActivity.this, WaitingQuestionActivity.class);
                         intent.putExtra("hostCode", hostCode);
                         startActivity(intent);
+                        finish();
                     }
                 } else {
                     // 호스트 정보를 찾을 수 없는 경우
