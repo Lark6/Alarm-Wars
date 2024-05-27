@@ -5,42 +5,40 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <!-- 루트 레이아웃 설정 -->
+    <RelativeLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
         tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/appName"
+        <!-- 앱 이름 표시 -->
+        <TextView android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alarm War"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
+            android:text="Alarm War"
             android:textSize="30sp"
+            android:textColor="@color/black"
             android:fontFamily="sans-serif-black"
             android:fontStyle="normal"
-            android:fontWeight="700"
-            android:textColor="@color/black" />
+            android:fontWeight="700" />
 
-        <ImageView
-            android:background="@drawable/round_background_border"
-            android:clipToOutline="true"
-            android:id="@+id/imgApp"
+        <!-- 앱 아이콘 표시 -->
+        <ImageView android:id="@+id/imgApp"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/app_icon"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/appName"
-            android:layout_marginTop="20dp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/app_icon"
+            android:background="@drawable/round_background_border"
+            android:clipToOutline="true" />
 
-        <EditText
-            android:id="@+id/etUserId"
+        <!-- 아이디 입력 필드 -->
+        <EditText android:id="@+id/etUserId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="아이디"
-            android:shape="rectangle"
             android:layout_below="@id/imgApp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="16dp"
@@ -48,10 +46,11 @@
             android:paddingLeft="16dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:background="@drawable/edit_text_rectangular_background"/>
+            android:hint="아이디"
+            android:background="@drawable/edit_text_rectangular_background" />
 
-        <LinearLayout
-            android:id="@+id/password_container"
+        <!-- 비밀번호 입력 필드와 보이기/숨기기 버튼 -->
+        <LinearLayout android:id="@+id/password_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/etUserId"
@@ -62,64 +61,59 @@
             android:background="@drawable/edit_text_rectangular_background"
             android:gravity="center_vertical">
 
-            <EditText
-                android:id="@+id/et_password"
+            <EditText android:id="@+id/et_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="비밀번호"
                 android:paddingLeft="16dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:hint="비밀번호"
                 android:inputType="textPassword"
-                android:background="@null"/>
+                android:background="@null" />
 
-            <ImageButton
-                android:id="@+id/btn_toggle_password"
+            <ImageButton android:id="@+id/btn_toggle_password"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="@null"
                 android:src="@drawable/ic_eye_off"
-                android:scaleType="centerInside"/>
+                android:background="@null"
+                android:scaleType="centerInside" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnLogin"
+        <!-- 로그인 버튼 -->
+        <Button android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="로그인"
-            android:radius="10dp"
             android:layout_below="@id/password_container"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:text="로그인"
             android:textSize="18sp"
             android:textColor="#FFFFFF"
             android:paddingTop="12dp"
             android:paddingBottom="12dp" />
 
-
-        <View
-            android:id="@+id/separatorActions"
+        <!-- 로그인 액션 구분선 -->
+        <View android:id="@+id/separatorActions"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#DDDDDD"
             android:layout_below="@id/btnLogin"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:background="#DDDDDD" />
 
-        <LinearLayout
-            android:id="@+id/llActions"
+        <!-- 추가 액션 영역 (ID/PW 찾기, 회원가입) -->
+        <LinearLayout android:id="@+id/llActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_below="@id/separatorActions"
-            android:gravity="center"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-            <TextView
-                android:id="@+id/btnFindIdPw"
+            <TextView android:id="@+id/btnFindIdPw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/find_idPw"
@@ -129,13 +123,11 @@
                 android:focusable="true"
                 android:onClick="onFindIdClicked" />
 
-            <View
-                android:layout_width="1dp"
+            <View android:layout_width="1dp"
                 android:layout_height="20dp"
                 android:background="#DDDDDD" />
 
-            <TextView
-                android:id="@+id/btnSignUp"
+            <TextView android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up"
@@ -146,50 +138,45 @@
                 android:onClick="onSignUpClicked" />
         </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/dividerLoginActions"
+        <!-- 간편 로그인 영역 -->
+        <LinearLayout android:id="@+id/dividerLoginActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_below="@id/llActions"
-            android:gravity="center"
-            android:layout_marginTop="20dp">
-
-            <View
-                android:id="@+id/separatorActionsLeft"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_weight="5" />
-
-            <TextView
-                android:id="@+id/tvSimpleLogin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text=" 간편 로그인 "
-                android:gravity="center"
-                android:layout_weight="3" />
-
-            <View
-                android:id="@+id/separatorActionsRight"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_weight="5"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llSocialMediaLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/dividerLoginActions"
             android:layout_marginTop="20dp"
+            android:orientation="horizontal"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/imgGoogle"
+            <View android:id="@+id/separatorActionsLeft"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="5"
+                android:background="#DDDDDD" />
+
+            <TextView android:id="@+id/tvSimpleLogin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text=" 간편 로그인 "
+                android:gravity="center" />
+
+            <View android:id="@+id/separatorActionsRight"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="5"
+                android:background="#DDDDDD"/>
+        </LinearLayout>
+
+        <!-- 소셜 미디어 로그인 옵션 -->
+        <LinearLayout android:id="@+id/llSocialMediaLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dividerLoginActions"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView android:id="@+id/imgGoogle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/google_icon"
@@ -198,8 +185,7 @@
                 android:focusable="true"
                 android:onClick="onFindIdClicked"/>
 
-            <ImageView
-                android:id="@+id/imgNaver"
+            <ImageView android:id="@+id/imgNaver"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/naver_icon"
@@ -208,8 +194,7 @@
                 android:focusable="true"
                 android:onClick="onFindIdClicked"/>
 
-            <ImageView
-                android:id="@+id/imgKakaotalk"
+            <ImageView android:id="@+id/imgKakaotalk"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/kakaotalk_icon"
@@ -217,9 +202,5 @@
                 android:focusable="true"
                 android:onClick="onFindIdClicked"/>
         </LinearLayout>
-
     </RelativeLayout>
-
 </ScrollView>
-
-
