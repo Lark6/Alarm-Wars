@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "740582126521",
+    "firebase_url": "https://alarm--wars-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "alarm--wars",
+    "storage_bucket": "alarm--wars.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740582126521:android:b8197e0fe77c37723f3c68",
+        "android_client_info": {
+          "package_name": "com.example.alarm__wars"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "740582126521-ejc72gtk37pn3g779judt6bccfl2i72a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8us-teYdM58NAFgXrfyJ7y9gz1WML1H4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740582126521-ejc72gtk37pn3g779judt6bccfl2i72a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

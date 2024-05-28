@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 등록된 ID 입력 필드 -->
+    <EditText android:id="@+id/registered_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ID(이메일)"
+        android:inputType="text"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_rectangular_background"/>
+
+    <!-- 이름 입력 필드 -->
+    <EditText android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름"
+        android:inputType="text"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_rectangular_background"/>
+
+    <!-- 휴대폰 번호 입력 필드와 국가 코드 선택 스피너, 인증번호 전송 버튼 포함하는 레이아웃 -->
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <!-- 국가 코드 선택 스피너 -->
+        <Spinner android:id="@+id/phone_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="14dp"
+            android:background="@drawable/edit_text_rectangular_background"/>
+
+        <!-- 휴대폰 번호 입력 필드 -->
+        <EditText android:id="@+id/phone_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:hint="휴대폰 번호(- 제외)"
+            android:inputType="phone"
+            android:background="@drawable/edit_text_rectangular_background"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"/>
+
+        <!-- 인증번호 전송 버튼 -->
+        <Button android:id="@+id/btn_send_verification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="인증번호"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"/>
+    </LinearLayout>
+
+    <!-- 인증번호 입력 및 확인 버튼, 재전송 버튼을 포함하는 레이아웃 -->
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <!-- 인증번호 입력 필드 -->
+        <RelativeLayout android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginEnd="8dp">
+
+            <EditText android:id="@+id/et_verification_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="인증번호 입력"
+                android:inputType="number"
+                android:background="@drawable/edit_text_rectangular_background"
+                android:layout_marginTop="8dp"
+                android:padding="12dp"/>
+        </RelativeLayout>
+
+        <!-- 확인 버튼 -->
+        <Button android:id="@+id/btn_verify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="확인"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"/>
+
+        <!-- 인증번호 재전송 버튼 -->
+        <Button android:id="@+id/btn_resend_verification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="재전송"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"/>
+    </LinearLayout>
+
+    <!-- 다음 단계로 이동하는 버튼 -->
+    <Button android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="다음"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"/>
+
+</LinearLayout>
