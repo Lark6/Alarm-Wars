@@ -56,7 +56,7 @@ public class SignupActivity extends AppCompatActivity {
         final String username = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-        final String phone = editTextPhone.getText().toString().trim();
+        final String phone = convertToInternationalFormat(editTextPhone.getText().toString().trim());
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -78,6 +78,16 @@ public class SignupActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private String convertToInternationalFormat(String phoneNumber) {
+        // Check if the phone number starts with 010
+        if (phoneNumber.startsWith("010")) {
+            // Convert to +82 format
+            return "+82" + phoneNumber.substring(1);
+        }
+        // Return the original phone number if it doesn't start with 010
+        return phoneNumber;
     }
 
     private void writeNewUser(String userId, String name, String email, String phone) {

@@ -107,62 +107,39 @@
             android:layout_below="@id/btnLogin"
             android:layout_marginTop="16dp" />
 
-        <LinearLayout
-            android:id="@+id/llActions"
+        <LinearLayout android:id="@+id/llActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_below="@id/separatorActions"
-            android:gravity="center"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-            <TextView
-                android:id="@+id/btnFindId"
+            <TextView android:id="@+id/btnFindIdPw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/find_id"
+                android:text="@string/find_idPw"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="20dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="onFindIdClicked" />
 
-            <View
-                android:layout_width="1dp"
+            <View android:layout_width="1dp"
                 android:layout_height="20dp"
                 android:background="#DDDDDD" />
 
-            <TextView
-                android:id="@+id/btnFindPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/find_password"
-                android:textAppearance="?attr/textAppearanceListItem"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="onFindPasswordClicked" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"
-                android:background="#DDDDDD" />
-
-            <TextView
-                android:id="@+id/btnSignUp"
+            <TextView android:id="@+id/btnSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sign_up"
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="20dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="onSignUpClicked" />
-
-
-
         </LinearLayout>
+
 
 
         <LinearLayout

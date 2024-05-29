@@ -2,13 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/textViewSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:text="회원 가입"
+        android:textColor="@color/black"
+        android:textSize="48sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="이름" />
+        android:layout_below="@id/textViewSignUp"
+        android:layout_marginTop="24dp"
+        android:hint="이름"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/editTextEmail"
@@ -17,7 +36,12 @@
         android:layout_below="@id/editTextUsername"
         android:layout_marginTop="16dp"
         android:hint="이메일"
-        android:inputType="textEmailAddress" />
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textEmailAddress"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -26,7 +50,12 @@
         android:layout_below="@id/editTextEmail"
         android:layout_marginTop="16dp"
         android:hint="비밀번호"
-        android:inputType="textPassword" />
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="textPassword"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/editTextPhone"
@@ -35,7 +64,12 @@
         android:layout_below="@id/editTextPassword"
         android:layout_marginTop="16dp"
         android:hint="전화번호"
-        android:inputType="phone" />
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="phone"
+        android:textColor="#000000"
+        android:textColorHint="#888888"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/buttonSignUp"
@@ -44,6 +78,14 @@
         android:layout_below="@id/editTextPhone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="회원 가입" />
+        android:text="회원 가입"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium" />
 
 </RelativeLayout>

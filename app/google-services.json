@@ -13,7 +13,20 @@
           "package_name": "com.example.alarm__wars"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "740582126521-fcit2v9gd7d9mjvmucl63mndhhgnmna0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.alarm__wars",
+            "certificate_hash": "8904b6d5ac71020369c8def8fd700c52324b5033"
+          }
+        },
+        {
+          "client_id": "740582126521-ejc72gtk37pn3g779judt6bccfl2i72a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA8us-teYdM58NAFgXrfyJ7y9gz1WML1H4"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "740582126521-ejc72gtk37pn3g779judt6bccfl2i72a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

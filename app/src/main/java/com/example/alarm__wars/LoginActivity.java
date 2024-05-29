@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
 
     private SignInButton signInButton;
     private Button loginButton;
@@ -95,12 +95,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
-                    try {
-                        GoogleSignInAccount account = task.getResult(ApiException.class);
-                        firebaseAuthWithGoogle(account);
-                    } catch (ApiException e) {
-                        Toast.makeText(getApplicationContext(), "Google sign in failed", Toast.LENGTH_LONG).show();
+                    if (intent != null) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            if (account != null) {
+                                firebaseAuthWithGoogle(account);
+                            }
+                        } catch (ApiException e) {
+                            Log.w(TAG, "Google sign in failed", e);
+                            Toast.makeText(getApplicationContext(), "Google sign in failed", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
@@ -116,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    // 로그인 성공 시 호출되는 메소드
     private void login() {
         final String email = editTextEmail.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -128,72 +132,75 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                // 로그인 성공 시 UID를 다음 액티비티로 전달
                                 String uid = user.getUid();
-                                goToMainActivity(uid);
+                                goToMainActivity(uid, email);
                             }
                         } else {
-                            // 로그인 실패 처리
+                            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    // 다음 액티비티로 이동하는 메소드
-    private void goToMainActivity(String uid) {
+    private void goToMainActivity(String uid, String email) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        // UID를 인텐트에 첨부하여 전달
         intent.putExtra("USER_ID", uid);
+        intent.putExtra("EMAIL", email);
         startActivity(intent);
         finish(); // 현재 액티비티 종료
     }
 
     private void signIn() {
-        Log.d("LoginActivity", "Starting Google Sign-In intent");
+        Log.d(TAG, "Starting Google Sign-In intent");
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         activityResultLauncher.launch(signInIntent);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("LoginActivity", "Authenticating with Google for account: " + acct.getEmail());
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("LoginActivity", "Google sign in successful");
+                            Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                checkUserData(user.getUid());
+                                checkUserData(user.getUid(), acct);
                             }
                         } else {
-                            Log.e("LoginActivity", "Google sign in failed", task.getException());
-                            Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_LONG).show();
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
 
-    private void checkUserData(String userId) {
+    private void checkUserData(String userId, GoogleSignInAccount account) {
         DatabaseReference usersRef = mDatabase.child("users").child(userId);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Intent intent;
+                String email = account.getEmail();
+                String name = account.getDisplayName();
+
                 if (snapshot.exists()) {
-                    // 사용자 정보가 데이터베이스에 있으면 사용자의 이름을 가져와서 환영 메시지를 표시합니다.
                     String username = snapshot.child("username").getValue(String.class);
                     Toast.makeText(getApplicationContext(), "반갑습니다 " + username + " 님", Toast.LENGTH_LONG).show();
-                    // 메인 액티비티로 이동합니다.
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish(); // 현재 LoginActivity 종료
+
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("USER_ID", userId);
+                    intent.putExtra("EMAIL", email);
+                    intent.putExtra("NAME", name);
                 } else {
-                    // 사용자 정보가 데이터베이스에 없으면 새로운 사용자이므로 회원가입 화면으로 이동합니다.
-                    Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                    startActivity(intent);
-                    finish(); // 현재 LoginActivity 종료
+                    intent = new Intent(LoginActivity.this, SignupActivity.class);
+                    intent.putExtra("EMAIL", email);
+                    intent.putExtra("NAME", name);
                 }
+                startActivity(intent);
+                finish();
             }
 
             @Override
@@ -204,9 +211,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onSignUpClicked(View view) {
-        // SignupActivity로 이동
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
 
+    public void onFindIdClicked(View view) {
+        Intent intent = new Intent(this, FindIdPwActivity.class);
+        startActivity(intent);
+    }
 }
