@@ -35,7 +35,6 @@
                 android:hint="휴대폰 번호(- 제외)"
                 android:inputType="phone"
                 android:background="@drawable/edit_text_rectangular_background"
-                android:layout_marginStart="8dp"
                 android:padding="12dp"/>
 
             <!-- 인증번호 전송 버튼 -->

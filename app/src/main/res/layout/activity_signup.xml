@@ -1,91 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/textViewSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:text="회원 가입"
-        android:textColor="@color/black"
-        android:textSize="48sp"
-        android:textStyle="bold" />
+    <!-- 전체 수직 레이아웃 설정 -->
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal"
+        android:background="@color/white">
 
-    <EditText
-        android:id="@+id/editTextUsername"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewSignUp"
-        android:layout_marginTop="24dp"
-        android:hint="이름"
-        android:padding="12dp"
-        android:background="@drawable/edittext_background"
-        android:textColor="#000000"
-        android:textColorHint="#888888"
-        android:textSize="16sp" />
+        <!-- 회원가입 제목 설정 -->
+        <TextView android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:text="회원가입"
+            android:textSize="50sp"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-black"
+            android:textFontWeight="600"/>
 
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextUsername"
-        android:layout_marginTop="16dp"
-        android:hint="이메일"
-        android:padding="12dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="textEmailAddress"
-        android:textColor="#000000"
-        android:textColorHint="#888888"
-        android:textSize="16sp" />
+        <!-- 필수 입력 정보 안내 메시지 -->
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            android:layout_marginBottom="8dp">
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextEmail"
-        android:layout_marginTop="16dp"
-        android:hint="비밀번호"
-        android:padding="12dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="textPassword"
-        android:textColor="#000000"
-        android:textColorHint="#888888"
-        android:textSize="16sp" />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="*"
+                android:textColor="@color/googleRed"/>
 
-    <EditText
-        android:id="@+id/editTextPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextPassword"
-        android:layout_marginTop="16dp"
-        android:hint="전화번호"
-        android:padding="12dp"
-        android:background="@drawable/edittext_background"
-        android:inputType="phone"
-        android:textColor="#000000"
-        android:textColorHint="#888888"
-        android:textSize="16sp" />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 필수 입력 정보입니다"
+                android:textColor="@color/black"/>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editTextPhone"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="회원 가입"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:background="@drawable/button_background"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium" />
+        <!-- 이름 입력 필드 설정 -->
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
 
-</RelativeLayout>
+            <TextView android:id="@+id/textViewNameRequired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/editTextUsername"
+                android:layout_marginEnd="8dp"
+                android:text="*"
+                android:textColor="@color/googleRed" />
+
+            <EditText android:id="@+id/editTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textViewNameRequired"
+                android:background="@drawable/edit_text_rectangular_background"
+                android:hint="이름"
+                android:inputType="text"
+                android:padding="12dp" />
+        </RelativeLayout>
+
+        <!-- 아이디 입력 필드 설정 -->
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView android:id="@+id/textViewEmailRequired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/editTextEmail"
+                android:layout_marginEnd="8dp"
+                android:text="*"
+                android:textColor="@color/googleRed" />
+
+            <EditText android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textViewEmailRequired"
+                android:background="@drawable/edit_text_rectangular_background"
+                android:hint="아이디(E-mail)"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"/>
+        </RelativeLayout>
+
+        <!-- 비밀번호 입력 필드와 보이기/숨기기 버튼 설정 -->
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView android:id="@+id/textViewPasswordRequired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:text="*"
+                android:textColor="@color/googleRed" />
+
+            <LinearLayout android:id="@+id/password_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textViewPasswordRequired"
+                android:orientation="horizontal"
+                android:background="@drawable/edit_text_rectangular_background"
+                android:gravity="center_vertical">
+
+                <EditText android:id="@+id/editTextPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="비밀번호(8-16자 영문, 숫자, 특수기호)"
+                    android:inputType="textPassword"
+                    android:padding="12dp"
+                    android:background="@null"/>
+
+                <ImageButton android:id="@+id/btn_toggle_password"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_eye_off"
+                    android:scaleType="centerInside"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- 전화번호 입력 필드 설정 -->
+        <RelativeLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <TextView android:id="@+id/textViewPhoneRequired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/editTextPhone"
+                android:layout_marginEnd="8dp"
+                android:text="*"
+                android:textColor="@color/googleRed" />
+
+            <EditText android:id="@+id/editTextPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textViewPhoneRequired"
+                android:background="@drawable/edit_text_rectangular_background"
+                android:hint="휴대폰 번호( - 제외 )"
+                android:inputType="phone"
+                android:padding="12dp"/>
+        </RelativeLayout>
+
+        <!-- 회원가입 버튼 -->
+        <Button android:id="@+id/buttonSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:padding="12dp"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
+</ScrollView>

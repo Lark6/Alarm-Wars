@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Alarm--Wars</string>
-    <string name="find_id"><u>아이디 찾기</u></string>
-    <string name="find_password"><u>비밀번호 찾기</u></string>
+    <string name="find_idPw"><u>아이디 / 비밀번호 찾기</u></string>
     <string name="sign_up"><u>회원가입</u></string>
     <string name="server_client_id">740582126521-ejc72gtk37pn3g779judt6bccfl2i72a.apps.googleusercontent.com</string>
     <string name="web_client_id">AIzaSyC0Ix1d0rIhAGdWCOUuilM_NjNCEC51yQ0</string>
@@ -10,5 +9,5 @@
     <string name="failed_login">구글 로그인 실패</string>
     <string name="success_logout">로그아웃 되었습니다</string>
     <string name="status_login">이미 로그인 되어있습니다</string>
-    <string name="find_idPw">ID/PW 찾기</string>
+
 </resources>

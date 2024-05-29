@@ -15,23 +15,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarmWars"
         tools:targetApi="31">
+
+        <!-- ID 및 비밀번호 찾기 활동, 외부에서 접근 불가능 -->
         <activity
-            android:name=".Findidpw"
+            android:name=".FindIdPwActivity"
             android:exported="false" />
+
+        <!-- 로그인 활동, 앱의 메인 진입점으로 외부에서 접근 가능 -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FindIdPwActivity" />
 
-        <!-- Declare SignupActivity here -->
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".MainActivity" />
+        <!-- 회원가입 활동, 앱 내부에서만 시작, 외부 접근 불가능 -->
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+
+        <!-- 메인 활동, 외부 앱이나 단축키 등에서 시작 가능 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+
     </application>
+
 
 </manifest>

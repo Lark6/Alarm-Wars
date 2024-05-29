@@ -91,6 +91,11 @@ public class FindPasswordFragment extends Fragment {
             return;
         }
 
+        // 한국 국가 코드 +82 추가
+        if (!phoneNumber.startsWith("+82")) {
+            phoneNumber = "+82" + phoneNumber.substring(1);
+        }
+
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber(phoneNumber)       // 전화번호 입력

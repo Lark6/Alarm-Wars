@@ -3,10 +3,13 @@ package com.example.alarm__wars;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView signupButton;
     private EditText editTextEmail, editTextPassword;
+    private ImageButton togglePasswordVisibilityButton;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -58,10 +62,33 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         editTextEmail = findViewById(R.id.etUserId);
-        editTextPassword = findViewById(R.id.etPassword);
+        editTextPassword = findViewById(R.id.et_password);
+        togglePasswordVisibilityButton = findViewById(R.id.btn_toggle_password);
         loginButton = findViewById(R.id.btnLogin);
         signInButton = findViewById(R.id.Glogin);
         signupButton = findViewById(R.id.btnSignUp);
+
+        togglePasswordVisibilityButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 사용자가 버튼을 누르고 있을 때 비밀번호 표시
+                        editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        editTextPassword.setSelection(editTextPassword.getText().length());
+                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // 사용자가 버튼에서 손을 뗐을 때 비밀번호 숨기기
+                        editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        editTextPassword.setSelection(editTextPassword.getText().length());
+                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye_off);
+                        return true;
+                }
+                return false;
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
