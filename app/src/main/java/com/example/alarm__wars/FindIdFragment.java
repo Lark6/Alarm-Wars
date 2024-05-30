@@ -220,7 +220,4 @@ public class FindIdFragment extends Fragment {
         clipboard.setPrimaryClip(clip);
         Toast.makeText(getActivity(), "이메일이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
     }
-
-
-
 }
