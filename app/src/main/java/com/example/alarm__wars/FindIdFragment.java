@@ -22,8 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.HttpsCallableResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -129,8 +132,13 @@ public class FindIdFragment extends Fragment {
         String phoneNumber = editTextPhoneNumber.getText().toString().trim();
         String enteredName = editTextName.getText().toString().trim();
 
-        if (TextUtils.isEmpty(phoneNumber) || !phoneNumber.matches("^[0-9]{11}$")) {
-            editTextPhoneNumber.setError("올바른 전화번호 형식이 아닙니다 (11자리 숫자 입력)");
+        // 입력된 전화번호를 국제 포맷으로 변경
+        if (!phoneNumber.startsWith("+82")) {
+            phoneNumber = "+82" + phoneNumber.substring(1);
+        }
+
+        if (TextUtils.isEmpty(phoneNumber) || !phoneNumber.matches("^\\+8210[0-9]{8}$")) {
+            editTextPhoneNumber.setError("올바른 전화번호 형식이 아닙니다 (+8210XXXXXXXX)");
             editTextPhoneNumber.requestFocus();
             return;
         }
@@ -141,31 +149,51 @@ public class FindIdFragment extends Fragment {
             return;
         }
 
-        String formattedPhoneNumber = "+82" + phoneNumber.substring(1);
-        callFirebaseFunction(formattedPhoneNumber, enteredName);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.orderByChild("phone").equalTo(phoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                boolean found = false;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null && user.getUsername().equals(enteredName)) {
+                        showEmailDialog(user.getEmail());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    Toast.makeText(getActivity(), "해당 전화번호와 이름으로 등록된 이메일이 없습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), "데이터베이스 에러: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void callFirebaseFunction(String phoneNumber, String name) {
-        FirebaseFunctions functions = FirebaseFunctions.getInstance();
+    public static class User {
+        private String username;
+        private String email;
+        private String phone;
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("phoneNumber", phoneNumber);
-        data.put("username", name);
+        public User() {
+            // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        }
 
-        functions
-                .getHttpsCallable("findUserByEmail")
-                .call(data)
-                .addOnSuccessListener(result -> {
-                    String email = (String) result.getData();
-                    if (email != null) {
-                        showEmailDialog(email);
-                    } else {
-                        Toast.makeText(getActivity(), "해당 전화번호와 이름으로 등록된 이메일이 없습니다.", Toast.LENGTH_LONG).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getActivity(), "에러: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+        public String getUsername() {
+            return username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
     }
 
     private void showEmailDialog(String email) {
@@ -177,4 +205,6 @@ public class FindIdFragment extends Fragment {
                 })
                 .show();
     }
+
+
 }
