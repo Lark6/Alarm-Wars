@@ -43,8 +43,12 @@
             android:name=".hostWaitActivity"
             android:exported="false" />
         <activity
+            android:name=".HostClientWaitActivity"
+            android:exported="false" />
+        <activity
             android:name=".IntroActivity"
             android:exported="true">
+
 
             <meta-data
                 android:name="android.app.lib_name"

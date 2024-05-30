@@ -96,7 +96,7 @@ public class RoomActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         if (alarmManager.canScheduleExactAlarms()) {
                 // 알람 설정 메서드 호출
-            fetchAlarmDataAndSetAlarms();
+            checkHostSelectionAndProceed();
         } else {
             requestExactAlarmPermission(this);
             Toast.makeText(this, "정확한 알람 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
@@ -106,7 +106,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private void checkHostSelectionAndProceed() {
         // 데이터베이스에서 호스트 선택 여부 확인
-        mDatabase.child(hostCode).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(hostCode).child("hostSelected").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -115,10 +115,11 @@ public class RoomActivity extends AppCompatActivity {
                         // 호스트가 선택되지 않았을 경우 출제 액티비티로 이동
                         // 출제 액티비티로 이동하기 전에 hostSelected 값을 참으로 변경
                         mDatabase.child(hostCode).child("hostSelected").setValue(true);
+                        fetchAlarmDataAndSetAlarms();
 
-                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
-                        intent.putExtra("hostCode", hostCode);
-                        startActivity(intent);
+//                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
+//                        intent.putExtra("hostCode", hostCode);
+//                        startActivity(intent);
                     } else {
                         // 호스트가 이미 선택된 경우 토스트 메시지 표시
                         Toast.makeText(RoomActivity.this, "이미 선택된 호스트입니다", Toast.LENGTH_SHORT).show();

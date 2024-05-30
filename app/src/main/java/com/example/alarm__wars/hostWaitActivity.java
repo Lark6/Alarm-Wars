@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,11 @@ public class hostWaitActivity extends AppCompatActivity {
     private  String hostCode;
     private DatabaseReference mDatabase;
 
+    private Handler handler;
+    private Runnable checkHostRunnable;
+
+    private boolean isSelf;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,16 +47,73 @@ public class hostWaitActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         TextView hostCodeText = findViewById(R.id.host_code);
 
+        isSelf = false;
+
         SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
         alarmTimeInMillis = sharedPreferences.getLong("alarmTimeInMillis", 0);
         hostCode = sharedPreferences.getString("hostCode", "호스트 코드가 없어요");
         hostCodeText.setText(hostCode);
-
         updateRemainingTime();
 
         startCountDown();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
+
+//        handler = new Handler();
+//        checkHostRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                checkClient();
+//                handler.postDelayed(this, 500); // 5초마다 실행
+////                if(!isSelf){
+////
+////                }
+////                else {
+////                    handler.removeCallbacks(this);
+////                }
+//            }
+//        };
+//        handler.post(checkHostRunnable);
+
+        // 클라이언트 나가는 거 감지
+//        SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+       // mDatabase.child(hostCode).child("hostSelected").addValueEventListener(new ValueEventListener() {
+        mDatabase.child(hostCode).child("clientOuted").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isClientOuted = dataSnapshot.getValue(Boolean.class);
+                    if (isClientOuted == true) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        mDatabase.child(hostCode).child("clientOuted").setValue(false);
+                        mDatabase.child(hostCode).child("hostSelected").setValue(false);
+                        boolean isAlarmSet = sharedPreferences.getBoolean("isAlarmSet", false);
+                        if(isAlarmSet){
+                            Toast.makeText(hostWaitActivity.this, "클라이언트 런침 ㅋ", Toast.LENGTH_SHORT).show();
+                            EndAlarmActivity.cancelAlarm(hostWaitActivity.this);
+                            editor.putBoolean("isAlarmSet", false);
+                            editor.apply();
+                        }
+                        Intent mainIntent = new Intent(hostWaitActivity.this, HostClientWaitActivity.class);
+                        startActivity(mainIntent);
+                        finish();
+//                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
+//                        intent.putExtra("hostCode", hostCode);
+//                        startActivity(intent);
+                    }
+                }
+//                } else {
+//                    // 호스트 정보를 찾을 수 없는 경우
+//                    Toast.makeText(hostWaitActivity.this, "호스트 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+//                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // 데이터베이스 오류 발생 시
+                Toast.makeText(hostWaitActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         // 데이터 변경 감지 리스너 등록
         binding.checkButton.setOnClickListener(view -> {
@@ -71,6 +135,33 @@ public class hostWaitActivity extends AppCompatActivity {
             startActivity(mainIntent);
             finish();
         });
+
+        binding.cancelButton.setOnClickListener(view -> {
+            // 팝업창 띄우기
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("정말 나갈꺼임?")
+                    .setPositiveButton("네", (dialog, which) -> {
+                        // 기존 코드 실행
+                        isSelf = true;
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        mDatabase.child(hostCode).child("hostOuted").setValue(true);
+                        editor.putBoolean("isAlarmSet", false);
+                        editor.putBoolean("isHost", false);
+                        editor.apply();
+                        EndAlarmActivity.cancelAlarm(this);
+
+                        Intent mainIntent = new Intent(hostWaitActivity.this, MainActivity.class);
+                        startActivity(mainIntent);
+                        finish();
+                    })
+                    .setNegativeButton("아니오", (dialog, which) -> {
+                        // "아니오"를 선택한 경우 실행될 코드 (아무 작업 없음)
+                    });
+            AlertDialog alertDialog;
+            alertDialog = builder.create();
+            alertDialog.show();
+        });
+
     }
 
 
@@ -210,5 +301,45 @@ public class hostWaitActivity extends AppCompatActivity {
 
         Toast.makeText(this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
     }
+
+    // 호스트 체크
+    private void checkClient() {
+        // 데이터베이스에서 호스트 선택 여부 확인
+        SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+        mDatabase.child(hostCode).child("isClientOuted").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    boolean isClientOuted = dataSnapshot.getValue(Boolean.class);
+                    if (isClientOuted == true) {
+                        Toast.makeText(hostWaitActivity.this, "클라이언트 런침 ㅋ", Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        mDatabase.child(hostCode).child("clientOuted").setValue(false);
+                        mDatabase.child(hostCode).child("hostSelected").setValue(false);
+                        editor.putBoolean("isAlarmSet", false);
+                        editor.apply();
+                        EndAlarmActivity.cancelAlarm(hostWaitActivity.this);
+                        Intent mainIntent = new Intent(hostWaitActivity.this, HostClientWaitActivity.class);
+                        startActivity(mainIntent);
+                        finish();
+//                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
+//                        intent.putExtra("hostCode", hostCode);
+//                        startActivity(intent);
+                    }
+                }
+//                } else {
+//                    // 호스트 정보를 찾을 수 없는 경우
+//                    Toast.makeText(hostWaitActivity.this, "호스트 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+//                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // 데이터베이스 오류 발생 시
+                Toast.makeText(hostWaitActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
 }

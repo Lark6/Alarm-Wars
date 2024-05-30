@@ -115,7 +115,7 @@ public class MakeRoomActivity extends AppCompatActivity {
             }
 
             // 알람 설정 버튼 클릭 시 WaitActivity 시작
-            Intent waitIntent = new Intent(MakeRoomActivity.this, hostWaitActivity.class);
+            Intent waitIntent = new Intent(MakeRoomActivity.this, HostClientWaitActivity.class);
             int selectedHour = Integer.parseInt(hour[spinner2.getSelectedItemPosition()]);
             int selectedMinute = Integer.parseInt(minute[spinner3.getSelectedItemPosition()]);
             String selectedAmPm = amPm[spinner1.getSelectedItemPosition()];
@@ -143,7 +143,7 @@ public class MakeRoomActivity extends AppCompatActivity {
 
             long alarmTimeInMillis = calculateAlarmTimeInMillis(selectedHour, selectedMinute, selectedDays);
             // 알람 설정
-            setAlarm(alarmTimeInMillis);
+//            setAlarm(alarmTimeInMillis);
 
             waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
 //            waitIntent.putExtra("hostCode", hostCode);
@@ -351,7 +351,7 @@ public class MakeRoomActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
 
         // 호스트 코드를 데이터베이스에 저장
-        Room room = new Room("Q", "A", false, alarmTime, false, false, selectedDaysList, false);
+        Room room = new Room("Q", "A", false, alarmTime, false, false, selectedDaysList, false, false, false);
         mDatabase.child(String.valueOf(hostCode)).setValue(room, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {

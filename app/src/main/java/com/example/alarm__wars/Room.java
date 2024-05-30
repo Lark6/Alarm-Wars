@@ -8,6 +8,9 @@ public class Room {
     private String answer;
     private boolean isHostSelected;
 //    private long alarmTime; // 알람 시간 정보를 저장할 변수
+    private boolean isClientOuted;
+
+    private boolean isHostOuted;
 
     private int alarmTime;
 
@@ -24,7 +27,7 @@ public class Room {
         // Default constructor required for calls to DataSnapshot.getValue(Room.class)
     }
 
-    public Room(String question, String answer, boolean isHostSelected, int alarmTime, boolean isButtonPressed, boolean isQuestionSubmitted, List<Boolean> dates, boolean isTimeChanged) {
+    public Room(String question, String answer, boolean isHostSelected, int alarmTime, boolean isButtonPressed, boolean isQuestionSubmitted, List<Boolean> dates, boolean isTimeChanged, boolean isHostOuted, boolean isClientOuted) {
         this.question = question;
         this.answer = answer;
         this.isHostSelected = isHostSelected;
@@ -33,6 +36,8 @@ public class Room {
         this.isQuestionSubmitted = isQuestionSubmitted;
         this.dates = dates;
         this.isTimeChanged = isTimeChanged;
+        this.isHostOuted = isHostOuted;
+        this.isClientOuted = isClientOuted;
     }
 
     public String getQuestion() {
@@ -54,6 +59,12 @@ public class Room {
     }
     public boolean isQuestionSubmitted() {
         return isQuestionSubmitted;
+    }
+    public boolean isClientOuted() {
+        return isClientOuted;
+    }
+    public boolean isHostOuted() {
+        return isHostOuted;
     }
     public List<Boolean> getDates() { return dates; }
     public long getAlarmTime() {
