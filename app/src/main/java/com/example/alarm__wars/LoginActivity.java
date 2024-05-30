@@ -64,19 +64,25 @@ public class LoginActivity extends AppCompatActivity {
         signupButton = findViewById(R.id.btnSignUp);
         signupButton.setOnClickListener(v -> onSignUpClicked());
 
-        togglePasswordVisibilityButton.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    editTextPassword.setSelection(editTextPassword.getText().length());
-                    return true;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    editTextPassword.setSelection(editTextPassword.getText().length());
-                    return true;
-                default:
-                    return false;
+        togglePasswordVisibilityButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 사용자가 버튼을 누르고 있을 때 비밀번호 표시
+                        editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                        editTextPassword.setSelection(editTextPassword.getText().length());
+                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye);
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // 사용자가 버튼에서 손을 뗐을 때 비밀번호 숨기기
+                        editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        editTextPassword.setSelection(editTextPassword.getText().length());
+                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye_off);
+                        return true;
+                }
+                return false;
             }
         });
     }
