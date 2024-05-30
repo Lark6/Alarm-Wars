@@ -29,6 +29,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -58,4 +59,5 @@ dependencies {
     // Android 테스트 라이브러리
     androidTestImplementation("androidx.test.ext:junit:1.1.5")         // JUnit4 통합을 위한 AndroidX Test Ext
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1") // UI 테스트를 위한 Espresso
+
 }

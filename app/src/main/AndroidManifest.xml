@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -30,6 +32,48 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EndAlarmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MakeQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SolveQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WaitingQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".updateTimeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".hostWaitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HostClientWaitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IntroActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity android:name=".MakeRoomActivity" />
+        <activity android:name=".WaitActivity" />
+        <activity android:name=".AlarmActivity" />
+        <activity
+            android:name=".RoomActivity"
+            android:exported="false"
+            android:label="@string/title_activity_room"
+            android:theme="@style/Theme.AlarmWars" />
 
         <!-- 회원가입 활동, 앱 내부에서만 시작, 외부 접근 불가능 -->
         <activity
@@ -41,6 +85,11 @@
             android:name=".MainActivity"
             android:exported="true" />
 
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false"
+            />
     </application>
 
 

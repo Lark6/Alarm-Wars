@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/host_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/timerText"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="125dp"
+        android:text="호스트 코드.."
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="전쟁을 준비하는 중입니다.."
+        android:textSize="30sp"
+        android:layout_centerInParent="true"
+        android:layout_above="@+id/timerText"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="50dp"/>
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:textSize="60sp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/checkButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#8692f7"
+        android:text="다시 설정"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/timerText" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#8692f7"
+        android:text="방 나가기"
+        android:layout_below="@+id/checkButton"
+        tools:ignore="UnknownId" />
+
+</RelativeLayout>

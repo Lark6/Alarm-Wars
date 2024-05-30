@@ -6,37 +6,43 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".RoomActivity">
 
-    <Button
-        android:id="@+id/create_room_button"
+    <TextView
+        android:id="@+id/textView15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="방 만들기"
-        android:onClick="createRoom" />
+        android:text="매칭에 성공했습니다!!"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp" />
 
     <Button
-        android:id="@+id/join_room_button"
+        android:id="@+id/question_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="방 참여"
-        android:onClick="joinRoom"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"
+        android:text="출제" />
 
     <Button
-        android:id="@+id/logout_button"
+        android:id="@+id/answer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:onClick="logout"
-        android:text="로그아웃" />
+        android:text="풀이" />
+
     <Button
-        android:id="@+id/exit_room_button"
+        android:id="@+id/ring_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="방 탈출"
-        android:layout_centerInParent="true"
-        android:onClick="promptForExitingRoom"/>
+        android:layout_marginTop="16dp"
+        android:text="알람 테스트" />
 
+    <Button
+        android:id="@+id/set_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="알람 설정" />
 
 </LinearLayout>
