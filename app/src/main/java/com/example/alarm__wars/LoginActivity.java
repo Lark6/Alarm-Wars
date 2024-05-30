@@ -80,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
     private void loginUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -93,12 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void googleSignIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 9001);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -112,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
@@ -124,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void goToMainActivity(FirebaseUser user) {
         if (user != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
