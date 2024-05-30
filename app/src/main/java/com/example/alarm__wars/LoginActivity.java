@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,13 +40,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
     private SignInButton signInButton;
     private Button loginButton;
-    private TextView signupButton;
+    private TextView signupButton, findIdPwButton;
     private EditText editTextEmail, editTextPassword;
     private ImageButton togglePasswordVisibilityButton;
     private GoogleSignInClient mGoogleSignInClient;
@@ -67,183 +71,113 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.btnLogin);
         signInButton = findViewById(R.id.Glogin);
         signupButton = findViewById(R.id.btnSignUp);
+        findIdPwButton = findViewById(R.id.btnFindIdPw);
 
-        togglePasswordVisibilityButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        // 사용자가 버튼을 누르고 있을 때 비밀번호 표시
-                        editTextPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                        editTextPassword.setSelection(editTextPassword.getText().length());
-                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye);
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        // 사용자가 버튼에서 손을 뗐을 때 비밀번호 숨기기
-                        editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                        editTextPassword.setSelection(editTextPassword.getText().length());
-                        togglePasswordVisibilityButton.setImageResource(R.drawable.ic_eye_off);
-                        return true;
-                }
-                return false;
-            }
-        });
+        signInButton.setOnClickListener(v -> signIn());
+        loginButton.setOnClickListener(v -> manualLogin());
+        signupButton.setOnClickListener(v -> startActivity(new Intent(this, SignupActivity.class)));
+        findIdPwButton.setOnClickListener(v -> onFindIdClicked());
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
-
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // SignupActivity로 이동
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        init();
+        setupGoogleSignIn();
     }
 
-    private void init() {
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent intent = result.getData();
-                    if (intent != null) {
-                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
-                        try {
-                            GoogleSignInAccount account = task.getResult(ApiException.class);
-                            if (account != null) {
-                                firebaseAuthWithGoogle(account);
-                            }
-                        } catch (ApiException e) {
-                            Log.w(TAG, "Google sign in failed", e);
-                            Toast.makeText(getApplicationContext(), "Google sign in failed", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                }
-            }
-        });
-        configSignIn();
-    }
-
-    private void configSignIn() {
+    private void setupGoogleSignIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }
 
-    private void login() {
-        final String email = editTextEmail.getText().toString().trim();
-        final String password = editTextPassword.getText().toString().trim();
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                String uid = user.getUid();
-                                goToMainActivity(uid, email);
-                            }
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                        }
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        handleSignInResult(GoogleSignIn.getSignedInAccountFromIntent(result.getData()));
                     }
                 });
     }
 
-    private void goToMainActivity(String uid, String email) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("USER_ID", uid);
-        intent.putExtra("EMAIL", email);
-        startActivity(intent);
-        finish(); // 현재 액티비티 종료
-    }
-
     private void signIn() {
-        Log.d(TAG, "Starting Google Sign-In intent");
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         activityResultLauncher.launch(signInIntent);
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                checkUserData(user.getUid(), acct);
-                            }
-                        } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account.getIdToken());
+        } catch (ApiException e) {
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            Toast.makeText(this, "Google 로그인 실패", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void checkUserData(String userId, GoogleSignInAccount account) {
-        DatabaseReference usersRef = mDatabase.child("users").child(userId);
-        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Intent intent;
-                String email = account.getEmail();
-                String name = account.getDisplayName();
-
-                if (snapshot.exists()) {
-                    String username = snapshot.child("username").getValue(String.class);
-                    Toast.makeText(getApplicationContext(), "반갑습니다 " + username + " 님", Toast.LENGTH_LONG).show();
-
-                    intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("USER_ID", userId);
-                    intent.putExtra("EMAIL", email);
-                    intent.putExtra("NAME", name);
-                } else {
-                    intent = new Intent(LoginActivity.this, SignupActivity.class);
-                    intent.putExtra("EMAIL", email);
-                    intent.putExtra("NAME", name);
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    verifyUserInDatabase(user);
                 }
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "데이터베이스 오류: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(LoginActivity.this, "Firebase 인증 실패", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void onSignUpClicked(View view) {
-        Intent intent = new Intent(this, SignupActivity.class);
-        startActivity(intent);
+    private void verifyUserInDatabase(FirebaseUser user) {
+        DatabaseReference usersRef = mDatabase.child("users").child(user.getUid());
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    createUserInDatabase(user);
+                } else {
+                    goToMainActivity(user.getUid(), user.getEmail());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w(TAG, "데이터베이스 오류", databaseError.toException());
+            }
+        });
     }
 
-    public void onFindIdClicked(View view) {
-        Intent intent = new Intent(this, FindIdPwActivity.class);
+    private void createUserInDatabase(FirebaseUser user) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", user.getEmail());
+        userData.put("name", user.getDisplayName());
+        DatabaseReference usersRef = mDatabase.child("users").child(user.getUid());
+        usersRef.setValue(userData).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(LoginActivity.this, "새 사용자 등록 성공", Toast.LENGTH_LONG).show();
+                goToMainActivity(user.getUid(), user.getEmail());
+            } else {
+                Toast.makeText(LoginActivity.this, "사용자 등록 실패", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void goToMainActivity(String uid, String email) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("USER_ID", uid);
+        intent.putExtra("EMAIL", email);
         startActivity(intent);
+        finish();
+    }
+
+    private void manualLogin() {
+        String email = editTextEmail.getText().toString();
+        String password = editTextPassword.getText().toString();
+        // Implement manual login logic here
+    }
+
+    public void onFindIdClicked() {
+        // Implement ID/PW find logic here
+    }
+
+    public void onSignUpClicked(View view) {
+        startActivity(new Intent(this, SignupActivity.class));
     }
 }
