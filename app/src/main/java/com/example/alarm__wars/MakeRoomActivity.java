@@ -107,6 +107,13 @@ public class MakeRoomActivity extends AppCompatActivity {
         binding.btnCancel.setOnClickListener(view -> finish());
 
         binding.btnMake.setOnClickListener(view -> {
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            if (!alarmManager.canScheduleExactAlarms()) {
+                // 알람 설정 메서드 호출
+                RoomActivity.requestExactAlarmPermission(this);
+                return;
+            }
+
             // 알람 설정 버튼 클릭 시 WaitActivity 시작
             Intent waitIntent = new Intent(MakeRoomActivity.this, hostWaitActivity.class);
             int selectedHour = Integer.parseInt(hour[spinner2.getSelectedItemPosition()]);
@@ -139,12 +146,16 @@ public class MakeRoomActivity extends AppCompatActivity {
             setAlarm(alarmTimeInMillis);
 
             waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
-            waitIntent.putExtra("hostCode", hostCode);
+//            waitIntent.putExtra("hostCode", hostCode);
             // Save alarm details to SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isAlarmSet", true);
             editor.putLong("alarmTimeInMillis", alarmTimeInMillis);
+            editor.putBoolean("isHost", true);
+            editor.putString("hostCode", hostCode);
             editor.apply();
+
+
             startActivity(waitIntent);
             finish();
 
@@ -296,11 +307,18 @@ public class MakeRoomActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("hostCode", hostCode);
         // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-        long currentTime1 = System.currentTimeMillis();
-        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
-        intent.setAction(action);
+//        long currentTime1 = System.currentTimeMillis();
+//        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
+//        intent.setAction(action);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        // PendingIntent를 생성합니다.
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

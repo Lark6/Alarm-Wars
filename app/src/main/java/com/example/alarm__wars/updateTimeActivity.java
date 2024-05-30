@@ -109,9 +109,9 @@ public class updateTimeActivity extends AppCompatActivity {
             // 알람 설정 버튼 클릭 시 WaitActivity 시작
             Intent waitIntent = new Intent(updateTimeActivity.this, hostWaitActivity.class);
             // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-            long currentTime3 = System.currentTimeMillis();
-            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime3;
-            waitIntent.setAction(action);
+//            long currentTime3 = System.currentTimeMillis();
+//            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime3;
+//            waitIntent.setAction(action);
 
             int selectedHour = Integer.parseInt(hour[spinner2.getSelectedItemPosition()]);
             int selectedMinute = Integer.parseInt(minute[spinner3.getSelectedItemPosition()]);
@@ -139,7 +139,7 @@ public class updateTimeActivity extends AppCompatActivity {
             // 알람 설정
             setAlarm(alarmTimeInMillis);
 
-            waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
+//            waitIntent.putExtra("alarmTimeInMillis", alarmTimeInMillis);
             // Save alarm details to SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isAlarmSet", true);
@@ -158,6 +158,8 @@ public class updateTimeActivity extends AppCompatActivity {
             mDatabase.child(hostCode).child("dates").setValue(selectedDaysList);
             mDatabase.child(hostCode).child("timeChanged").setValue(true);
 
+
+
             finish();
 
 
@@ -168,11 +170,17 @@ public class updateTimeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("hostCode", hostCode);
         // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-        long currentTime1 = System.currentTimeMillis();
-        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
-        intent.setAction(action);
+//        long currentTime1 = System.currentTimeMillis();
+//        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
+//        intent.setAction(action);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        // PendingIntent를 생성합니다.
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

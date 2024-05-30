@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alarm__wars.databinding.ActivityWaitBinding;
@@ -37,20 +38,23 @@ public class hostWaitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityWaitBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        TextView hostCodeText = findViewById(R.id.host_code);
 
-        Intent intent = getIntent();
-        alarmTimeInMillis = intent.getLongExtra("alarmTimeInMillis", 0);
+        SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+        alarmTimeInMillis = sharedPreferences.getLong("alarmTimeInMillis", 0);
+        hostCode = sharedPreferences.getString("hostCode", "호스트 코드가 없어요");
+        hostCodeText.setText(hostCode);
+
         updateRemainingTime();
 
         startCountDown();
 
-        hostCode = getIntent().getStringExtra("hostCode");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
 
         // 데이터 변경 감지 리스너 등록
         binding.checkButton.setOnClickListener(view -> {
 //            Toast.makeText(this, "알람이 취소되었습니다.", Toast.LENGTH_SHORT).show();
-            SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
+//            SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isAlarmSet", false);
             editor.apply();
@@ -60,9 +64,9 @@ public class hostWaitActivity extends AppCompatActivity {
             Intent mainIntent = new Intent(hostWaitActivity.this, updateTimeActivity.class);
             mainIntent.putExtra("hostCode", hostCode);
             // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-            long currentTime2 = System.currentTimeMillis();
-            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime2;
-            mainIntent.setAction(action);
+//            long currentTime2 = System.currentTimeMillis();
+//            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime2;
+//            mainIntent.setAction(action);
 
             startActivity(mainIntent);
             finish();

@@ -3,9 +3,14 @@ package com.example.alarm__wars;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -79,14 +84,25 @@ public class RoomActivity extends AppCompatActivity {
         setAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                fetchAlarmDataAndSetAlarms();
-//                Intent intent = new Intent(RoomActivity.this, WaitActivity.class);
-//                startActivity(intent);
+                // 권한 요청
+                onRequestPermissionsResult();
             }
         });
-
     }
+
+
+    // 권한 요청 결과에 따라 다음 작업 수행
+    public void onRequestPermissionsResult() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager.canScheduleExactAlarms()) {
+                // 알람 설정 메서드 호출
+            fetchAlarmDataAndSetAlarms();
+        } else {
+            requestExactAlarmPermission(this);
+            Toast.makeText(this, "정확한 알람 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void checkHostSelectionAndProceed() {
         // 데이터베이스에서 호스트 선택 여부 확인
@@ -160,6 +176,8 @@ public class RoomActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putBoolean("isAlarmSet", true);
                                 editor.putLong("alarmTimeInMillis", alarmTimeInMillis);
+                                editor.putBoolean("isHost", false);
+                                editor.putString("hostCode", hostCode);
                                 editor.apply();
                                 startActivity(waitIntent);
                                 finish();
@@ -194,20 +212,43 @@ public class RoomActivity extends AppCompatActivity {
 
     @SuppressLint("ScheduleExactAlarm")
     private void setAlarm(long alarmTimeInMillis) {
+        // 브로드캐스트 수신기를 지정하는 인텐트를 생성합니다.
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("hostCode", hostCode);
-        // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-        long currentTime1 = System.currentTimeMillis();
-        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
-        intent.setAction(action);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
+        // PendingIntent를 생성합니다.
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        // AlarmManager를 통해 알람을 설정합니다.
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         alarmManager.setExact(AlarmManager.RTC, alarmTimeInMillis, pendingIntent);
 
         Toast.makeText(this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
     }
+
+    public static void requestExactAlarmPermission(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.d("AlarmDebug", "Requesting exact alarm permission");
+                Intent settingsIntent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                context.startActivity(settingsIntent);
+                Toast.makeText(context, "정확한 알람 권한이 필요합니다. 설정에서 권한을 부여하세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.d("AlarmDebug", "Exact alarm permission already granted");
+            }
+        } else {
+            Log.d("AlarmDebug", "SDK version is lower than S, exact alarm permission not required");
+        }
+    }
+
+
+
 
 }
