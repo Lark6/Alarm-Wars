@@ -42,14 +42,12 @@ public class FindPasswordFragment extends Fragment {
         editTextVerificationCode = view.findViewById(R.id.et_verification_code);
         buttonSendVerification = view.findViewById(R.id.btn_send_verification);
         buttonVerify = view.findViewById(R.id.btn_verify);
-        buttonResetPassword = view.findViewById(R.id.btn_next);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         buttonSendVerification.setOnClickListener(v -> sendVerificationCode());
         buttonVerify.setOnClickListener(v -> verifyCode());
-        buttonResetPassword.setOnClickListener(v -> resetPassword());
 
         return view;
     }

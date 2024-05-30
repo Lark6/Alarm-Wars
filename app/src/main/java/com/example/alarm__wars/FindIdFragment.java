@@ -1,5 +1,8 @@
 package com.example.alarm__wars;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,15 +55,12 @@ public class FindIdFragment extends Fragment {
         buttonSendVerification = view.findViewById(R.id.btn_send_verification);
         buttonVerify = view.findViewById(R.id.btn_verify);
         buttonResendVerification = view.findViewById(R.id.btn_resend_verification);
-        buttonNext = view.findViewById(R.id.btn_next);
 
         mAuth = FirebaseAuth.getInstance();
 
         buttonSendVerification.setOnClickListener(v -> sendVerificationCode());
         buttonVerify.setOnClickListener(v -> verifyCode());
         buttonResendVerification.setOnClickListener(v -> resendVerificationCode());
-        buttonNext.setOnClickListener(v -> findEmailByPhoneNumber());
-
         return view;
     }
 
@@ -91,7 +91,7 @@ public class FindIdFragment extends Fragment {
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(getActivity(), "인증 실패: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "인증 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -116,10 +116,9 @@ public class FindIdFragment extends Fragment {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getActivity(), "전화번호 인증 성공", Toast.LENGTH_LONG).show();
-                        buttonNext.setEnabled(true);
+                        findEmailByPhoneNumber();
                     } else {
-                        Toast.makeText(getActivity(), "인증 실패: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "인증 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -163,13 +162,13 @@ public class FindIdFragment extends Fragment {
                     }
                 }
                 if (!found) {
-                    Toast.makeText(getActivity(), "해당 전화번호와 이름으로 등록된 이메일이 없습니다.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "해당 전화번호와 이름으로 등록된 이메일이 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), "데이터베이스 에러: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "데이터베이스 에러: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,14 +196,31 @@ public class FindIdFragment extends Fragment {
     }
 
     private void showEmailDialog(String email) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("등록된 이메일")
-                .setMessage("이메일: " + email)
-                .setPositiveButton("확인", (dialog, which) -> {
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                })
-                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("등록된 이메일");
+        builder.setMessage("이메일: " + email);
+
+        // '확인' 버튼 설정
+        builder.setPositiveButton("확인", (dialog, which) -> {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        });
+
+        // '복사' 버튼 설정
+        builder.setNegativeButton("복사", (dialog, which) -> {
+            copyToClipboard(email);
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        });
+
+        builder.show();
     }
+
+    private void copyToClipboard(String email) {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("email", email);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(getActivity(), "이메일이 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+
 
 
 }
