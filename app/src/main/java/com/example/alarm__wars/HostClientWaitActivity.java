@@ -29,7 +29,6 @@ public class HostClientWaitActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,23 +49,21 @@ public class HostClientWaitActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isHost", false);
                 editor.apply();
+
                 Intent intent = new Intent(HostClientWaitActivity.this, MainActivity.class);
                 startActivity(intent);
-                // 여기에 방 room class 제거
+                // 방 삭제
+                deleteRoom(hostCode);
                 finish();
             }
         });
 
-
-        // 데이터 변경 감지 리스너 등록
         mDatabase.child(hostCode).child("hostSelected").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // 데이터가 변경될 때마다 호출됨
-                boolean hostSelected = dataSnapshot.getValue(boolean.class);
+                boolean hostSelected = dataSnapshot.getValue(Boolean.class);
                 if(hostSelected){
                     long alarmTimeInMillis = sharedPreferences.getLong("alarmTimeInMillis", 0);
-
                     boolean isAlarmSet = sharedPreferences.getBoolean("isAlarmSet", false);
                     if(!isAlarmSet){
                         setAlarm(alarmTimeInMillis);
@@ -76,17 +73,26 @@ public class HostClientWaitActivity extends AppCompatActivity {
                     }
 
                     finish();
-
                     Intent intent = new Intent(HostClientWaitActivity.this, hostWaitActivity.class);
                     intent.putExtra("hostCode", hostCode);
                     startActivity(intent);
-
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // 데이터베이스 오류 발생 시 호출됨
                 Log.e("Firebase", "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    private void deleteRoom(String hostCode) {
+        DatabaseReference roomRef = mDatabase.child(hostCode);
+        roomRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "방이 성공적으로 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "방 삭제에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -95,26 +101,9 @@ public class HostClientWaitActivity extends AppCompatActivity {
     private void setAlarm(long alarmTimeInMillis) {
         Intent intent = new Intent(this, AlarmReceiver.class);
         intent.putExtra("hostCode", hostCode);
-        // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-//        long currentTime1 = System.currentTimeMillis();
-//        String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime1;
-//        intent.setAction(action);
-
-        // PendingIntent를 생성합니다.
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
         alarmManager.setExact(AlarmManager.RTC, alarmTimeInMillis, pendingIntent);
-
         Toast.makeText(this, "알람 설정 완료", Toast.LENGTH_SHORT).show();
     }
-
-
 }

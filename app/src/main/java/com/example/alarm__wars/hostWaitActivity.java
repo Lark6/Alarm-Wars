@@ -59,25 +59,6 @@ public class hostWaitActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("rooms");
 
-//        handler = new Handler();
-//        checkHostRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                checkClient();
-//                handler.postDelayed(this, 500); // 5초마다 실행
-////                if(!isSelf){
-////
-////                }
-////                else {
-////                    handler.removeCallbacks(this);
-////                }
-//            }
-//        };
-//        handler.post(checkHostRunnable);
-
-        // 클라이언트 나가는 거 감지
-//        SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
-       // mDatabase.child(hostCode).child("hostSelected").addValueEventListener(new ValueEventListener() {
         mDatabase.child(hostCode).child("clientOuted").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -97,15 +78,9 @@ public class hostWaitActivity extends AppCompatActivity {
                         Intent mainIntent = new Intent(hostWaitActivity.this, HostClientWaitActivity.class);
                         startActivity(mainIntent);
                         finish();
-//                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
-//                        intent.putExtra("hostCode", hostCode);
-//                        startActivity(intent);
+
                     }
                 }
-//                } else {
-//                    // 호스트 정보를 찾을 수 없는 경우
-//                    Toast.makeText(hostWaitActivity.this, "호스트 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
-//                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -117,8 +92,6 @@ public class hostWaitActivity extends AppCompatActivity {
 
         // 데이터 변경 감지 리스너 등록
         binding.checkButton.setOnClickListener(view -> {
-//            Toast.makeText(this, "알람이 취소되었습니다.", Toast.LENGTH_SHORT).show();
-//            SharedPreferences sharedPreferences = getSharedPreferences("AlarmPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isAlarmSet", false);
             editor.apply();
@@ -128,9 +101,6 @@ public class hostWaitActivity extends AppCompatActivity {
             Intent mainIntent = new Intent(hostWaitActivity.this, updateTimeActivity.class);
             mainIntent.putExtra("hostCode", hostCode);
             // 현재 시간을 액션에 포함하여 고유한 값을 만듭니다.
-//            long currentTime2 = System.currentTimeMillis();
-//            String action = "com.example.alarm__wars.ACTION_ALARM_" + currentTime2;
-//            mainIntent.setAction(action);
 
             startActivity(mainIntent);
             finish();
@@ -181,9 +151,6 @@ public class hostWaitActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 // 알람이 울릴 때 AlarmActivity로 전환
-//                Intent alarmIntent = new Intent(WaitActivity.this, RingActivity.class);
-//                startActivity(alarmIntent);
-//                finish();
             }
         }.start();
     }
@@ -229,8 +196,6 @@ public class hostWaitActivity extends AppCompatActivity {
                             if (dataSnapshot.exists()) {
                                 int serverAlarmTime = dataSnapshot.getValue(int.class);
                                 System.out.println(serverAlarmTime);
-//                                alarmTime = Calendar.getInstance();
-//                                alarmTime.setTimeInMillis(serverAlarmTime);
 //
                                 boolean[] selectedDays = new boolean[ServerDays.size()];
                                 for (int i = 0; i < ServerDays.size(); i++) {
@@ -321,21 +286,25 @@ public class hostWaitActivity extends AppCompatActivity {
                         EndAlarmActivity.cancelAlarm(hostWaitActivity.this);
                         Intent mainIntent = new Intent(hostWaitActivity.this, HostClientWaitActivity.class);
                         startActivity(mainIntent);
+                        deleteRoom(hostCode);
                         finish();
-//                        Intent intent = new Intent(RoomActivity.this, QuestionActivity.class);
-//                        intent.putExtra("hostCode", hostCode);
-//                        startActivity(intent);
                     }
                 }
-//                } else {
-//                    // 호스트 정보를 찾을 수 없는 경우
-//                    Toast.makeText(hostWaitActivity.this, "호스트 정보를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
-//                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // 데이터베이스 오류 발생 시
                 Toast.makeText(hostWaitActivity.this, "데이터베이스 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void deleteRoom(String hostCode) {
+        DatabaseReference roomRef = mDatabase.child(hostCode);
+        roomRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "방이 성공적으로 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "방 삭제에 실패하였습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
