@@ -103,11 +103,30 @@ public class FindIdFragment extends Fragment {
 
     private void verifyCode() {
         String code = editTextVerificationCode.getText().toString().trim();
-        if (TextUtils.isEmpty(code)) {
-            editTextVerificationCode.setError("인증번호를 입력하세요");
+        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+
+        // 전화번호 필드가 비어 있는지 확인
+        if (TextUtils.isEmpty(phoneNumber)) {
+            editTextPhoneNumber.setError("전화번호를 입력하세요");
+            editTextPhoneNumber.requestFocus();
             return;
         }
 
+        // 전화번호 형식이 올바른지 확인
+        if (!phoneNumber.matches("^01([0-9])([0-9]{7,8})$")) {
+            editTextPhoneNumber.setError("올바른 전화번호 형식이 아닙니다");
+            editTextPhoneNumber.requestFocus();
+            return;
+        }
+
+        // 인증번호 필드가 비어 있는지 확인
+        if (TextUtils.isEmpty(code)) {
+            editTextVerificationCode.setError("인증번호를 입력하세요");
+            editTextVerificationCode.requestFocus();
+            return;
+        }
+
+        // 이하 인증 절차 진행
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithPhoneAuthCredential(credential);
     }
@@ -116,9 +135,12 @@ public class FindIdFragment extends Fragment {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
+                        // 인증 성공 시 로직
                         findEmailByPhoneNumber();
                     } else {
-                        Toast.makeText(getActivity(), "인증 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        // 인증 실패 시 피드백
+                        Toast.makeText(getActivity(), "인증번호가 틀렸습니다. 다시 시도해 주세요: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
                     }
                 });
     }
@@ -202,13 +224,13 @@ public class FindIdFragment extends Fragment {
 
         // '확인' 버튼 설정
         builder.setPositiveButton("확인", (dialog, which) -> {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            dialog.dismiss(); // 다이얼로그 닫기
         });
 
         // '복사' 버튼 설정
         builder.setNegativeButton("복사", (dialog, which) -> {
             copyToClipboard(email);
-            startActivity(new Intent(getActivity(), LoginActivity.class));
+            dialog.dismiss(); // 다이얼로그 닫기
         });
 
         builder.show();

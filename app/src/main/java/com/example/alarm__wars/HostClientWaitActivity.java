@@ -1,7 +1,6 @@
 package com.example.alarm__wars;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -50,10 +49,9 @@ public class HostClientWaitActivity extends AppCompatActivity {
                 editor.putBoolean("isHost", false);
                 editor.apply();
 
-                Intent intent = new Intent(HostClientWaitActivity.this, MainActivity.class);
-                startActivity(intent);
                 // 방 삭제
                 deleteRoom(hostCode);
+                // 현재 액티비티 종료 (이전 액티비티로 돌아가기)
                 finish();
             }
         });
@@ -61,11 +59,11 @@ public class HostClientWaitActivity extends AppCompatActivity {
         mDatabase.child(hostCode).child("hostSelected").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                boolean hostSelected = dataSnapshot.getValue(Boolean.class);
-                if(hostSelected){
+                Boolean hostSelected = dataSnapshot.getValue(Boolean.class);
+                if (hostSelected != null && hostSelected) {
                     long alarmTimeInMillis = sharedPreferences.getLong("alarmTimeInMillis", 0);
                     boolean isAlarmSet = sharedPreferences.getBoolean("isAlarmSet", false);
-                    if(!isAlarmSet){
+                    if (!isAlarmSet) {
                         setAlarm(alarmTimeInMillis);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isAlarmSet", true);

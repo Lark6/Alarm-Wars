@@ -1,22 +1,31 @@
 package com.example.alarm__wars;
 
+import static com.google.android.material.internal.ViewUtils.dpToPx;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -40,6 +49,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // 시스템 다크 모드 설정을 따라가도록 설정
+        AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        );
+
         mAuth = FirebaseAuth.getInstance();
 
         // Configure Google Sign In
@@ -61,8 +75,13 @@ public class LoginActivity extends AppCompatActivity {
         TextView findIdPw = findViewById(R.id.btnFindIdPw);
         findIdPw.setOnClickListener(v -> onFindIdClicked());
 
+
         signupButton = findViewById(R.id.btnSignUp);
         signupButton.setOnClickListener(v -> onSignUpClicked());
+
+
+        SignInButton signInButton = findViewById(R.id.Glogin);
+        setGooglePlusButtonText(signInButton, "Google로 로그인");
 
         togglePasswordVisibilityButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -86,15 +105,51 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setText(buttonText);
+                tv.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER);
+
+                // FrameLayout.LayoutParams를 사용하여 왼쪽 마진 추가
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT, // 너비를 WRAP_CONTENT로 설정
+                        FrameLayout.LayoutParams.WRAP_CONTENT); // 높이를 WRAP_CONTENT로 설정
+
+                int leftPadding = dpToPx(10); // 10dp를 픽셀로 변환
+                tv.setPadding(leftPadding, tv.getPaddingTop(), tv.getPaddingRight(), tv.getPaddingBottom());
+
+                tv.setLayoutParams(layoutParams);
+
+                return;
+            }
+        }
+    }
+
+    public int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
+    }
+
     private void loginUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
+
+        // 이메일과 비밀번호가 비어있는지 검사
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(LoginActivity.this, "아이디와 비밀번호를 입력하세요", Toast.LENGTH_SHORT).show();
+            return; // 정보가 부족하면 함수 실행을 중단
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         goToMainActivity(mAuth.getCurrentUser());
                     } else {
-                        Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "인증에 실패했습니다", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -111,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
+                Log.w(TAG, "Google 로그인 실패", e);
             }
         }
     }
@@ -122,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         goToMainActivity(mAuth.getCurrentUser());
                     } else {
-                        Toast.makeText(LoginActivity.this, "Firebase authentication failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Firebase 인증 실패", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

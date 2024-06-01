@@ -1,27 +1,50 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:background="@color/alice_blue"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dp">
 
     <Spinner
         android:id="@+id/operatorSpinner"
         android:entries="@array/operations_array"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
-    <EditText
-        android:id="@+id/numberEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:inputType="number" />
+        android:padding="10.2dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/edittext_background"/>
 
-    <ImageButton
-        android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_delete" />
+        android:orientation="horizontal"
+        android:background="@drawable/edittext_background"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:layout_marginStart="8dp">
+
+        <EditText
+            android:id="@+id/numberEditText"
+            android:hint="숫자"
+            android:textStyle="bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:background="@null"
+            android:padding="8dp"/>
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_delete"
+            android:background="#00ffffff"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+    </LinearLayout>
 
 </LinearLayout>

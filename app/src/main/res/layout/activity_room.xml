@@ -1,48 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
+    android:background="@drawable/gradient_background"
     tools:context=".RoomActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="16dp">
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="매칭에 성공했습니다!!"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="매칭에 성공했습니다!!"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/question_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="출제" />
+        <Button
+            android:id="@+id/question_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="출제"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_marginHorizontal="50dp"/>
 
-    <Button
-        android:id="@+id/answer_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="풀이" />
+        <Button
+            android:id="@+id/answer_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="풀이"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_marginHorizontal="50dp"/>
 
-    <Button
-        android:id="@+id/ring_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="알람 테스트" />
+        <Button
+            android:id="@+id/ring_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="알람 테스트"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_marginHorizontal="50dp"/>
 
-    <Button
-        android:id="@+id/set_alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="알람 설정" />
+        <Button
+            android:id="@+id/set_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="알람 설정"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_marginHorizontal="50dp"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <!-- 화면 하단에 고정될 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/green_grass"
+        android:background="#00ffffff"/>
+
+</RelativeLayout>

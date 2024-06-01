@@ -1,79 +1,139 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-    <TextView
-        android:id="@+id/resultTextView"
+    android:background="@drawable/gradient_background"
+    tools:context=".MainActivity">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="여기에 식이 나타납니다."
-        android:textAlignment="center" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <LinearLayout
-        android:id="@+id/mainLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            <EditText
-                android:id="@+id/numberEditText_1"
-                android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/resultTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="숫자"
-                android:layout_weight="1"
-                android:inputType="number" />
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:text="여기에 식이 나타납니다."
+                android:textAlignment="center"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="20dp" />
+
+            <LinearLayout
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@color/alice_blue"
+                android:elevation="4dp"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/numberEditText_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="숫자"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:padding="8dp"
+                        android:background="@drawable/edittext_background" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Spinner
+                        android:id="@+id/operatorSpinner"
+                        android:entries="@array/operations_array"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10.7dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/edittext_background"/>
+
+                    <EditText
+                        android:id="@+id/numberEditText"
+                        android:hint="숫자"
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/edittext_background" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="수식 추가하기"
+                android:textStyle="bold"
+                android:background="@drawable/button_background"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp" />
+
+            <Button
+                android:id="@+id/check_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="식 확인하기"
+                android:textStyle="bold"
+                android:background="@drawable/button_background"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp" />
+
+            <Button
+                android:id="@+id/Submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="식 제출하기"
+                android:textStyle="bold"
+                android:background="@drawable/button_background"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp" />
+
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+    </ScrollView>
 
-            <Spinner
-                android:id="@+id/operatorSpinner"
-                android:entries="@array/operations_array"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+    <!-- 화면 하단에 고정될 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/green_grass"
+        android:background="#00ffffff"/>
 
-            <EditText
-                android:id="@+id/numberEditText"
-                android:hint="숫자"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="number" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:text="수식 추가하기" />
-
-    <Button
-        android:id="@+id/check_question"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:text="식 확인하기" />
-    <Button
-        android:id="@+id/Submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:text="식 제출하기" />
-</LinearLayout>
+</RelativeLayout>

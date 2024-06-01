@@ -3,58 +3,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@drawable/gradient_background"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/host_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/timerText"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="124dp"
-        android:layout_marginBottom="125dp"
-        android:text="호스트 코드.."
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/Text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="전쟁을 준비하는 중입니다.."
-        android:textSize="30sp"
-        android:layout_centerInParent="true"
-        android:layout_above="@+id/timerText"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="50dp"/>
-
-    <TextView
-        android:id="@+id/timerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00:00:00"
-        android:textSize="60sp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"/>
-
-    <Button
-        android:id="@+id/checkButton"
+    <!-- 스크롤뷰 -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#8692f7"
-        android:text="다시 설정"
-        android:layout_marginBottom="30dp"
-        android:layout_below="@+id/timerText" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <Button
-        android:id="@+id/cancelButton"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity">
+
+            <TextView
+                android:id="@+id/host_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="호스트 코드.."
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp"
+                android:padding="8dp"/>
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/host_code"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="16dp"
+                android:padding="8dp"
+                android:text="전쟁을 준비하는 중입니다.."
+                android:textColor="@color/text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/timerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00"
+                android:textSize="70sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_below="@id/status_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp"
+                android:padding="8dp"/>
+
+            <Button
+                android:id="@+id/checkButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="다시 설정"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/button_background"
+                android:layout_below="@id/timerText"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp"
+                android:layout_marginHorizontal="32dp"/>
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="방 나가기"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/button_background"
+                android:layout_below="@id/checkButton"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:padding="16dp"
+                android:layout_marginHorizontal="32dp"/>
+        </RelativeLayout>
+    </ScrollView>
+
+    <!-- 화면 하단에 고정될 이미지 -->
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#8692f7"
-        android:text="방 나가기"
-        android:layout_below="@+id/checkButton"
-        tools:ignore="UnknownId" />
-
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/green_grass"
+        android:background="#00ffffff"/>
 </RelativeLayout>

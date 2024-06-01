@@ -1,43 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:background="@drawable/gradient_background"
+    tools:context=".MainActivity">
 
-    <TextClock
-        android:id="@+id/textClock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:layout_marginTop="32dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="16dp">
 
-    <TextView
-        android:id="@+id/textView30"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="축하합니다!"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        <!-- 시계 -->
+        <TextClock
+            android:id="@+id/textClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="32dp" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView3"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        app:srcCompat="@tools:sample/avatars"-->
-<!--        />-->
+        <!-- 축하 메시지 -->
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="축하합니다!"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="알람이 종료됩니다!"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
-</LinearLayout>
+        <!-- 알람 종료 메시지 -->
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알람이 종료됩니다!"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium" />
+
+        <!-- 이미지 추가 -->
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/alarm_off"
+            android:contentDescription="Alarm Image"/>
+    </LinearLayout>
+
+    <!-- 화면 하단에 고정될 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/green_grass"
+        android:background="#00ffffff"/>
+
+</RelativeLayout>

@@ -1,42 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp"
+    android:background="@drawable/gradient_background"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/create_room_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="방 만들기"
-        android:onClick="createRoom" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/join_room_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="방 참여"
-        android:onClick="joinRoom"
-        android:layout_marginTop="16dp"/>
+        <Button
+            android:id="@+id/create_room_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="방 만들기"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
+            android:onClick="createRoom" />
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="logout"
-        android:text="로그아웃" />
-    <Button
-        android:id="@+id/exit_room_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="방 탈출"
-        android:layout_centerInParent="true"
-        android:onClick="promptForExitingRoom"/>
+        <Button
+            android:id="@+id/join_room_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="방 참여"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
+            android:onClick="joinRoom"/>
 
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
+            android:onClick="logout"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/exit_room_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="방 탈출"
+            android:textStyle="bold"
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:onClick="promptForExitingRoom"/>
+    </LinearLayout>
+
+    <!-- 화면 하단에 고정될 이미지 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/green_grass"
+        android:background="#00ffffff"/>
+
+</RelativeLayout>

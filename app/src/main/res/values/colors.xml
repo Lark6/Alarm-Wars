@@ -14,4 +14,55 @@
     <color name="darkCharcoal">#323232</color>
     <color name="chryslerCharcoal">#4d4c4f</color>
     <color name="googleRed">#ea4335</color>
+    <color name="dark_blue">#1A237E</color> <!-- Indigo 900 -->
+    <color name="darker_blue">#0D133E</color> <!-- Darker shade of Indigo 900 -->
+    <color name="light_gray">#E0E0E0</color> <!-- Light Gray for texts -->
+    <color name="gray_blue">#455A64</color> <!-- Blue Gray 700 -->
+    <color name="dark_gray_blue">#263238</color> <!-- Blue Gray 900 -->
+    <color name="very_dark_blue">#101F30</color> <!-- Custom very dark blue for background -->
+    <color name="warm_gray">#9E9E9E</color> <!-- Gray 500 -->
+    <color name="darker_warm_gray">#424242</color> <!-- Gray 800 -->
+    <color name="soft_orange">#FFAB91</color> <!-- Red Orange 200 -->
+    <color name="darker_soft_orange">#D84315</color> <!-- Red Orange 900 -->
+    <color name="dark_gray">#212121</color> <!-- Gray 900 -->
+    <color name="cool_gray">#B0BEC5</color> <!-- Blue Gray 200 -->
+    <color name="darker_cool_gray">#37474F</color> <!-- Blue Gray 800 -->
+    <color name="soft_teal">#80CBC4</color> <!-- Teal 200 -->
+    <color name="darker_soft_teal">#00695C</color> <!-- Teal 800 -->
+    <color name="off_white">#FAFAFA</color> <!-- Off White for texts -->
+    <color name="very_dark_gray">#121212</color> <!-- Deep Gray for background -->
+    <color name="light_blue">#ADD8E6</color>
+    <color name="deep_blue">#00008B</color>
+    <color name="sky_blue">#87CEEB</color>
+    <color name="light_sky_blue">#87CEFA</color>
+    <color name="vivid_sky_blue">#00BFFF</color>
+    <color name="deep_sky_blue">#00BFFF</color>
+    <color name="powder_blue">#B0E0E6</color>
+    <color name="baby_blue">#89CFF0</color>
+    <color name="pastel_blue">#A7C7E7</color>
+    <color name="soft_sky_blue">#CAE4DB</color>
+    <color name="light_periwinkle">#CCCCFF</color>
+    <color name="alice_blue">#E0F7FA</color>
+    <color name="clear_blue">#A2CBEE</color>
+
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="border_color">#BDBDBD</color>
+
+    <!-- Background color -->
+    <color name="background_color">#A2CBEE</color>
+
+    <!-- Primary text color -->
+    <color name="text_primary">#333333</color> <!-- 어두운 회색 -->
+    <color name="text_secondary">#6699CC</color>
+
+    <!-- Toggle button colors -->
+    <color name="toggle_on">#FFFFFF</color> <!-- 흰색 -->
+    <color name="toggle_off">#A2CBEE</color> <!-- 연한 파란색 -->
+    <color name="toggle_background">#6699CC</color> <!-- 중간 파란색 -->
+
+    <!-- Button background colors -->
+    <color name="button_background">#8692F7</color> <!-- 밝은 파란색 -->
+    <color name="button_cancel">#EEEEEE</color> <!-- 밝은 회색 -->
 </resources>

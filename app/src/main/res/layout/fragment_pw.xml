@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/alice_blue"
+    android:padding="8dp"
     android:orientation="vertical">
 
     <!-- 등록된 ID 입력 필드 -->
