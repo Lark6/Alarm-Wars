@@ -66,7 +66,6 @@ import java.util.Random;
             }
 
             findViewById(R.id.logout_button).setOnClickListener(v -> logout());
-            findViewById(R.id.exit_room_button).setOnClickListener(v -> promptForExitingRoom());
             createRoomButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,42 +132,6 @@ import java.util.Random;
             });
 
             builder.show();
-        }
-        private void promptForExitingRoom() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("방 탈출");
-
-            final EditText input = new EditText(this);
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
-            builder.setView(input);
-
-            builder.setPositiveButton("확인", (dialog, which) -> {
-                String hostCode = input.getText().toString();
-                deleteRoom(hostCode);
-            });
-            builder.setNegativeButton("취소", (dialog, which) -> dialog.cancel());
-
-            builder.show();
-        }
-
-        private void deleteRoom(String hostCode) {
-            DatabaseReference roomRef = mDatabase.child(hostCode);
-            roomRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        roomRef.removeValue();
-                        Toast.makeText(MainActivity.this, "방이 성공적으로 삭제되었습니다.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "해당 코드를 가진 방이 없습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, "데이터베이스 오류: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
         public void logout() {

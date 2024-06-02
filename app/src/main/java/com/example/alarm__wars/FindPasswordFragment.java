@@ -95,16 +95,9 @@ public class FindPasswordFragment extends Fragment {
         String code = editTextVerificationCode.getText().toString().trim();
         String phoneNumber = editTextPhoneNumber.getText().toString().trim();
 
-        // 전화번호 필드가 비어 있는지 확인
-        if (TextUtils.isEmpty(phoneNumber)) {
-            editTextPhoneNumber.setError("전화번호를 입력하세요");
-            editTextPhoneNumber.requestFocus();
-            return;
-        }
-
         // 전화번호 형식이 올바른지 확인
-        if (!phoneNumber.matches("^01([0-9])([0-9]{7,8})$")) {
-            editTextPhoneNumber.setError("올바른 전화번호 형식이 아닙니다");
+        if (TextUtils.isEmpty(phoneNumber) || !phoneNumber.matches("^[0-9]{11}$")) {
+            editTextPhoneNumber.setError("올바른 전화번호 형식이 아닙니다 (11자리 숫자 입력)");
             editTextPhoneNumber.requestFocus();
             return;
         }

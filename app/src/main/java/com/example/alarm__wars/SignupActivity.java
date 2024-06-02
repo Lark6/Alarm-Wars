@@ -3,6 +3,8 @@ package com.example.alarm__wars;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -84,26 +87,56 @@ public class SignupActivity extends AppCompatActivity {
     private void signUp() {
         final String username = editTextUsername.getText().toString().trim();
         final String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-        final String phone = convertToInternationalFormat(editTextPhone.getText().toString().trim());
+        final String password = editTextPassword.getText().toString().trim();
+        final String phone = editTextPhone.getText().toString().trim();
 
+        // 전화번호 유효성 검사
+        if (TextUtils.isEmpty(phone) || !phone.matches("^[0-9]{11}$")) {
+            editTextPhone.setError("올바른 전화번호 형식이 아닙니다 (11자리 숫자 입력)");
+            editTextPhone.requestFocus();
+            return;
+        }
+
+        // 비밀번호 유효성 검사
+        if (TextUtils.isEmpty(password) || !password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$")) {
+            editTextPassword.setError("비밀번호는 8-16자 길이이며, 영문, 숫자, 특수기호를 모두 포함해야 합니다.");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        // 이메일 중복 검사
+        mAuth.fetchSignInMethodsForEmail(email).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                if (task.isSuccessful()) {
+                    boolean isNewUser = task.getResult().getSignInMethods().isEmpty();
+                    if (!isNewUser) {
+                        Toast.makeText(SignupActivity.this, "이 이메일은 이미 사용 중입니다.", Toast.LENGTH_LONG).show();
+                    } else {
+                        registerUser(username, email, password, phone);
+                    }
+                } else {
+                    Toast.makeText(SignupActivity.this, "오류: 이메일 확인 실패", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+
+    private void registerUser(String username, String email, String password, String phone) {
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            // Add additional user information to Realtime Database
                             if (user != null) {
-                                // Use UID as the primary key
                                 writeNewUser(user.getUid(), username, email, phone);
                                 Toast.makeText(SignupActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-                                finish(); // Close SignUpActivity and go back to LoginActivity
+                                finish();
                             }
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(SignupActivity.this, "회원가입 실패", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignupActivity.this, "회원가입 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
