@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="상대방을 기다리는 중입니다..."
-            android:textSize="28sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="30dp" />
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="호스트 코드"
-            android:textSize="25sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="25dp" />

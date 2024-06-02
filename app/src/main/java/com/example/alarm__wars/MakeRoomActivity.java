@@ -137,7 +137,6 @@ public class MakeRoomActivity extends AppCompatActivity {
 
             // Save alarm details to SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isAlarmSet", true);
             editor.putLong("alarmTimeInMillis", alarmTimeInMillis);
             editor.putBoolean("isHost", true);
             editor.putString("hostCode", hostCode);

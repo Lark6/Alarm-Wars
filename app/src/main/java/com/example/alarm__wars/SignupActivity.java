@@ -131,7 +131,7 @@ public class SignupActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
-                                writeNewUser(user.getUid(), username, email, phone);
+                                writeNewUser(user.getUid(), username, email, convertToInternationalFormat(phone));
                                 Toast.makeText(SignupActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
                                 finish();
                             }

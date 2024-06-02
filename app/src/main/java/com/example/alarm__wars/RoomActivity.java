@@ -50,35 +50,8 @@ public class RoomActivity extends AppCompatActivity {
         hostCode = getIntent().getStringExtra("hostCode");
         System.out.println("RoomActivity hostcode: "+hostCode);
 
-        Button questionButton = findViewById(R.id.question_button);
-        Button answerButton = findViewById(R.id.answer_button);
-        Button ringTestButton = findViewById(R.id.ring_test);
         Button setAlarmButton = findViewById(R.id.set_alarm);
 
-        // 출제 버튼 클릭 시
-        questionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkHostSelectionAndProceed();
-            }
-        });
-
-        // 풀이 버튼 클릭 시
-        answerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkHostSelectionAndProceed();
-            }
-        });
-
-        ringTestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RoomActivity.this, RingActivity.class);
-                intent.putExtra("hostCode", hostCode);
-                startActivity(intent);
-            }
-        });
 
         // 알람설정 버튼 클릭 시
         setAlarmButton.setOnClickListener(new View.OnClickListener() {

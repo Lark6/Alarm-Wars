@@ -18,17 +18,17 @@
             android:id="@+id/textClock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:layout_marginTop="30dp"
             android:textColor="@color/white"
-            android:layout_marginTop="30dp"/>
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="상대가 문제를 출제중입니다..."
-            android:textSize="24dp"
+            android:textSize="26dp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:layout_marginTop="30dp"

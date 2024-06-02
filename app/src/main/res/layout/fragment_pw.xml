@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="아이디(E-mail)"
+        android:textStyle="bold"
         android:inputType="textEmailAddress"
         android:layout_marginTop="8dp"
         android:padding="12dp"
@@ -21,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="이름"
+        android:textStyle="bold"
         android:inputType="text"
         android:layout_marginTop="12dp"
         android:padding="12dp"
@@ -39,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:hint="휴대폰 번호(- 제외)"
+            android:textStyle="bold"
             android:inputType="phone"
             android:background="@drawable/edit_text_rectangular_background"
             android:padding="12dp"/>
@@ -48,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="인증번호"
+            android:textStyle="bold"
             android:layout_marginStart="8dp"
             android:padding="12dp"/>
     </LinearLayout>
@@ -68,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="인증번호 입력"
+                android:textStyle="bold"
                 android:inputType="number"
                 android:background="@drawable/edit_text_rectangular_background"
                 android:layout_marginTop="8dp"
@@ -80,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="확인"
+            android:textStyle="bold"
             android:layout_marginTop="8dp"
             android:padding="12dp"/>
 
@@ -89,6 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="재전송"
+            android:textStyle="bold"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:padding="12dp"/>

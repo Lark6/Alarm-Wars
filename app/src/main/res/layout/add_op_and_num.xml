@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:background="@color/alice_blue"
     android:gravity="center_vertical"
+    android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
     <Spinner
